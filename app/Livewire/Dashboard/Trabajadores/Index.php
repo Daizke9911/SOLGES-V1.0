@@ -28,7 +28,7 @@ class Index extends Component
     {   
         $trabajadores = Trabajador::with('persona', 'cargo')->orderBy('created_at', 'desc');
 
-        if ($this->buscador) {
+        if ($this->buscador) { //buscador
             $trabajadores->where(function ($q) {
                 $q->where('persona_cedula', 'like', '%' . $this->buscador . '%')
                     ->orWhere('zona_trabajo', 'like', '%' . $this->buscador . '%');
@@ -56,7 +56,8 @@ class Index extends Component
         $this->persona_cedula = '';    
     }
 
-    public function create($vista)
+    //PARA ABRIR EL FORMULARIO DE CREAR
+    public function create($vista) // esta variable $vista es la que recibe el dato enviado por la etiqueta de wire:click = create 
     {
         if ($vista === 'create') {
             $this->cambiarVista = $vista; 
@@ -182,7 +183,7 @@ class Index extends Component
         }, $filename);
     }
 
-    public function render()
+    public function render() // siempre actualiza la vista cuando hay un cambio livewire
     {
         return view('livewire.dashboard.trabajadores.index',[
             'trabajadores' => $this->index(),

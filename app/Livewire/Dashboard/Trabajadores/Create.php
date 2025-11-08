@@ -142,7 +142,7 @@ class Create extends Component
 
             return $this->avanzarPaso = 3;
 
-        } else {
+        } else { 
 
             //PERSONA NO EXISTE
             $this->personaEncontrada = $persona;

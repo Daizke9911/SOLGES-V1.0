@@ -60,7 +60,7 @@ class Show extends Component
         }
     }
 
-    public function cerrarEliminar()
+    public function cerrarEliminar() // esta funcion es el boton de cancelar de la carta de confirmar eliminacion de trabajador
     {
         $this->cambiarVista = null; 
     }

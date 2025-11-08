@@ -8,7 +8,7 @@
         border-left: 4px solid #f59e0b; /* Borde naranja */
     }
     .badge-hoy {
-        background-color: #f59e0b; /* Naranja */
+        background-color: #f59e0b; /* Naranja */ 
         color: white;
     }
     .badge-proximo {
@@ -33,7 +33,7 @@
                 </div>
                 <div class="flex items-center justify-end space-x-4">
                     @if($cambiarVista === 'list')
-                        <button wire:click="create('create')" 
+                        <button wire:click="create('create')" {{-- el wire:click es una etiqueta livewire para llamar la fucnion create--}}
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
                             <i class='bx bx-plus mr-2'></i>
                             Nueva Trabajador
@@ -53,8 +53,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         @if($cambiarVista === 'list' || $cambiarVista === 'destroy')
-
-
             <div class="bg-white rounded-xl shadow-xl p-2 mb-4">
                 <div class="flex max-lg:flex-col lg:items-center lg:justify-between gap-4">
                     <div class="relative w-full sm:w-auto">
@@ -113,6 +111,12 @@
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div class="flex items-center">
                                         <i class='bx bx-briefcase mr-2 text-base'></i> CARGO
+                                    </div>
+                                </th>
+
+                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <div class="flex items-center">
+                                        <i class='bx bx-building-house mr-2 text-base'></i> ZONA
                                     </div>
                                 </th>
                                 
@@ -187,6 +191,10 @@
                                         <span class="px-2 py-0.5 bg-blue-200 text-blue-700 rounded-full text-xs font-medium">
                                             {{ $trabajador->cargo->descripcion ?? 'Sin Cargo' }}
                                         </span>
+                                    </td>
+
+                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 hide-on-mobile">
+                                            {{ $trabajador->zona_trabajo}}
                                     </td>
 
                                     <td class="px-4 py-3 whitespace-nowrap text-sm">
