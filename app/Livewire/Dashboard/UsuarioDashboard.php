@@ -3,18 +3,22 @@
 namespace App\Livewire\Dashboard;
 
 use App\Models\Solicitud;
-use App\Models\Visita;
+use App\Models\VisitasVisita;
 use App\Models\Ambito;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\UserSecurityAnswer;
+use App\Models\Trabajador;
+use App\Models\SubCategorias;
 
 class UsuarioDashboard extends Component
 {
     use WithPagination;
 
+    public $showSecurityNotification;
     public $activeTab = 'dashboard';
     public $solicitudes;
 
@@ -22,6 +26,19 @@ class UsuarioDashboard extends Component
     {
         $this->activeTab = request()->get('tab', 'dashboard');
         $this->loadData();
+
+   
+if (auth()->check()) {
+            $user = Auth::user();
+            $userId = $user->persona_cedula;
+
+            $hasNoAnswers = UserSecurityAnswer::where('user_cedula', $userId)
+                                              ->doesntExist();
+
+            if ($hasNoAnswers) {
+                $this->showSecurityNotification = true;
+            }
+        }
     }
 
     public function loadData()
@@ -30,11 +47,12 @@ class UsuarioDashboard extends Component
             ->where('persona_cedula', Auth::user()->persona_cedula)
             ->orderBy('fecha_creacion', 'desc')
             ->get();
-            
-        $this->visitas = Visita::with(['ambito'])
-            ->where('persona_cedula', Auth::user()->persona_cedula)
-            ->orderBy('fecha', 'desc')
-            ->get();
+            /* 
+            $this->visitas = VisitasVisita::with(['asistente', 'estatus', 'solicitud'])
+                ->whereHas('solicitud', function ($query) {
+                    $query->where('persona_cedula', Auth::user()->persona_cedula);
+                })
+                ->get(); */
     }
 
     public function redirectToCreateSolicitud()

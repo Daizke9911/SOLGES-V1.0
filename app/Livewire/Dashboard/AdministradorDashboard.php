@@ -3,7 +3,7 @@
 namespace App\Livewire\Dashboard;
 
 use App\Models\Solicitud;
-use App\Models\Visita;
+use App\Models\VisitaEquipo;
 use App\Models\Categorias;
 use App\Models\User;
 use Livewire\Component;
@@ -26,9 +26,7 @@ class AdministradorDashboard extends Component
     public function loadData()
     {
         // Load all visitas for admin view
-        $this->visitas = Visita::with(['persona'])
-            ->orderBy('fecha', 'desc')
-            ->get();
+        $this->visitas = VisitaEquipo::with(['visita'])->where('cedula', Auth::user()->persona_cedula)->get();
 
             $this->categorias = Categorias::all();
             

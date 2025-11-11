@@ -35,8 +35,14 @@ class AdministradorSolicitudes extends Component
     {
         if (Auth::user()->isSuperAdministrador() || Auth::user()->isAdministrador()) {
 
-            if ($this->search) {   
-                $solicitud = Solicitud::with(['persona', 'subcategoriaRelacion', 'comunidadRelacion', 'estatusRelacion'])->where(function ($q) {
+            $solicitud = Solicitud::with(['persona', 'subcategoriaRelacion', 'comunidadRelacion', 'estatusRelacion']);
+
+            if($this->estatusSolicitud){
+                $solicitud->where('estatus', $this->estatusSolicitud);
+            }
+
+            if ($this->search) {
+                $solicitud->where(function ($q) {
                     $q->where('solicitud_id', 'like', '%' . $this->search . '%')
                         ->orWhere('titulo', 'like', '%' . $this->search . '%')
                         ->orWhere('fecha_creacion', 'like', '%' . $this->search . '%');
@@ -52,9 +58,9 @@ class AdministradorSolicitudes extends Component
             }else{
                 $solicitud = Solicitud::with(['persona', 'subcategoriaRelacion', 'comunidadRelacion', 'estatusRelacion']);
             }
-
-            if($this->estatusSolicitud !== 0 ){
-                $solicitud = Solicitud::where('estatus', $this->estatusSolicitud);
+            
+            if($this->estatusSolicitud){
+                $solicitud->where('estatus', $this->estatusSolicitud);
             }
             
             if (strpos($this->sort, '.') !== false) {
@@ -87,7 +93,7 @@ class AdministradorSolicitudes extends Component
 
     public function viewSolicitud($solicitudId)
     {
-        $this->showSolicitud = Solicitud::with(['persona', 'subcategoriaRelacion', 'comunidadRelacion', 'estatusRelacion', 'visitasRelacion', 'reunionRelacion'])
+        $this->showSolicitud = Solicitud::with(['persona', 'subcategoriaRelacion', 'comunidadRelacion', 'estatusRelacion', 'reunionRelacion'])
             ->find($solicitudId);
         
         if (!$this->showSolicitud) {
@@ -165,7 +171,7 @@ class AdministradorSolicitudes extends Component
             [
                 'N° Ticket' => 'Registro Generado el:',
                 'Título' => now()->format('d-m-Y H:i'),
-                'Descripcion' => '', 'Estatus' => '', 'Categoría' => '', 'Subcategoría' => '',
+                'Descripcion' => 'Reporte generado por el sistema de gestión de solicitudes del CMBEY', 'Estatus' => '', 'Categoría' => '', 'Subcategoría' => '',
                 'Tipo de Solicitud' => '', 'Derecho de Palabra' => '', 'Solicitante' => '', 'Cédula' => '', 
                 'País' => '', 'Estado/Región' => '', 'Municipio' => '', 'Parroquia' => '', 'Comunidad' => '', 'Dirección' => '', 
                 'Observaciones Administrativas' => '', 'Asignación a Visitas' => '', 'Fecha de Creación' => '',

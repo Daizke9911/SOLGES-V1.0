@@ -80,6 +80,7 @@ class RegisterForm extends Component
         'password.required' => 'Se requiere de una contrañera',
         'direccion.required' => 'Se requiere de una direccion',
         'direccion.max' => 'La direccion es demasiado larga',
+        'selectedQuestions.*.required' => 'Debes seleccionar alguna pregunta.',
         'selectedQuestions.*.different' => 'Debes seleccionar preguntas diferentes.',
         'securityAnswers.*.required' => 'Todas las respuestas de seguridad son obligatorias.',
         'securityAnswers.*.min' => 'Las respuestas deben tener al menos 2 caracteres.',

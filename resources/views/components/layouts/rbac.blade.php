@@ -63,9 +63,9 @@
                         </li>
                     </template>
 
-                    <template x-if="userRole === 3">
+                    <template x-if="userRole > 1">
                         <li>
-                            <a href="{{ route('dashboard.superadmin') }}?tab=visitas" @click="sidebarOpen = false"
+                            <a href="{{ route('dashboard.visitas') }}" @click="sidebarOpen = false"
                                 class="sidebar-item flex items-center p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
                                 <i class='bx bx-calendar-check text-xl mr-3'></i>
                                 <span>Visitas</span>
@@ -250,7 +250,6 @@
 
 
 
-            <!-- Logout Button -->
             <div class="p-4 border-t border-white border-opacity-20">
                 <form method="POST" action="{{route('logout')}}">
                     @csrf

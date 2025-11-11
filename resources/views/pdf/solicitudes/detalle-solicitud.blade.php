@@ -12,6 +12,29 @@
             padding: 0;
         }
 
+        .header-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .logo-container {
+            float: left;/
+            width: 200px;
+        }
+
+        .info-container {
+            float: right;
+            text-align: right;/
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .info-container p {
+            margin: 0;
+            line-height: 1.4;
+            color: #838383;
+        }
+
         .header {
             text-align: center;
             padding: 15px;
@@ -19,6 +42,7 @@
             /* gray-100 */
             border-bottom: 2px solid #3b82f6;
             /* blue-500 */
+            height: 100px;
         }
 
         .content {
@@ -60,9 +84,19 @@
 
 <body>
 
+
     <div class="header">
-        <h1>Reporte de la Solictiud</h1>
-        <p>Generado el: {{ now()->format('d/m/Y H:i') }}</p>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="{{ public_path('img/logotipo.png') }}" alt="Logo de mi Aplicación" style="width: 200px;">
+            </div>
+
+            <div class="info-container">
+                <p>Reporte Generado el: {{now()->format('d/m/Y')}}</p>
+                <p>Por: {{ Auth::user()->persona->nombre}} {{Auth::user()->persona->apellido}}</p>
+                <p>{{Auth::user()->persona->nacionalidad === 1 ? 'V' : 'E'}}-{{Auth::user()->persona->cedula}}</p>
+            </div>
+        </div>
     </div>
 
     <div class="content bg-blue-600">
@@ -112,6 +146,7 @@
         </table>
 
     </div>
+    <p style="color:#3333335b; padding-top: 320px; text-align: center;">Reporte generado por el sistema de gestión de solicitudes del CMBEY</p>
 </body>
 
 </html>

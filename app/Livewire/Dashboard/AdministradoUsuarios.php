@@ -142,14 +142,10 @@ class AdministradoUsuarios extends Component
         $this->currentStep = 'list';
     }
 
-    // ======================
-    // WIZARD NAVIGATION
-    // ======================
     
     public function previousStep()
     {
         if ($this->wizardStep > 1) {
-            // En modo edición, no permitir volver al paso 1
             if ($this->isEditMode && $this->wizardStep === 2) {
                 return;
             }

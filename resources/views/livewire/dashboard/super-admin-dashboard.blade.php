@@ -1,19 +1,26 @@
 <div class="min-h-screen" id='init'>
-<style>
-/* ... (Tus estilos se mantienen) ... */
-.birthday-today-row {
-background-color: #fffbeb !important; /* Fondo amarillo muy claro para hoy */
-border-left: 4px solid #f59e0b; /* Borde naranja */
-}
-.badge-hoy {
-background-color: #f59e0b; /* Naranja */
-color: white;
-}
-.badge-proximo {
-background-color: #bfdbfe; /* Azul claro */
-color: #1e40af; /* Azul oscuro */
-}
-</style>
+    <style>
+        /* ... (Tus estilos se mantienen) ... */
+        .birthday-today-row {
+            background-color: #fffbeb !important;
+            /* Fondo amarillo muy claro para hoy */
+            border-left: 4px solid #f59e0b;
+            /* Borde naranja */
+        }
+
+        .badge-hoy {
+            background-color: #f59e0b;
+            /* Naranja */
+            color: white;
+        }
+
+        .badge-proximo {
+            background-color: #bfdbfe;
+            /* Azul claro */
+            color: #1e40af;
+            /* Azul oscuro */
+        }
+    </style>
     <!-- Dashboard Content -->
     <div class="p-6">
         <!-- Welcome Header -->
@@ -23,6 +30,38 @@ color: #1e40af; /* Azul oscuro */
             </h1>
             <p class="mt-2 text-gray-600">Bienvenido, {{ auth()->user()->persona->nombre }} - Control Total del Sistema
             </p>
+        </div>
+
+        <div>
+            @if ($showSecurityNotification)
+            <div
+                class="bg-orange-50 border border-orange-400 text-orange-900 p-6 rounded-2xl shadow-xl relative mb-8 flex items-start space-x-4">
+
+                <div class="flex-shrink-0 mt-1">
+                    <i class='bx bxs-error-alt text-4xl text-orange-600'></i>
+                </div>
+
+                <div class="flex-1">
+                    <strong class="font-extrabold block text-xl mb-2 leading-tight">
+                    </strong>
+                    <p class="block text-lg sm:inline leading-relaxed">
+                        No has establecido tus preguntas de seguridad. Esta configuración es vital para recuperar tu
+                        cuenta.
+                        <a href="{{ route('dashboard.seguridad') }}"
+                            class="font-bold underline text-orange-700 hover:text-orange-900 transition-colors ml-1">
+                            Ve a configurarlas ahora
+                        </a>.
+                    </p>
+                </div>
+
+                <span
+                    class="absolute top-3 right-3 p-1 cursor-pointer rounded-full hover:bg-orange-100 transition-colors"
+                    wire:click="$set('showSecurityNotification', false)" title="Ocultar esta notificación">
+                    <i class='bx bx-x text-2xl text-orange-500'></i>
+                </span>
+            </div>
+            @endif
+
         </div>
 
         <!-- Stats Cards -->
@@ -41,8 +80,7 @@ color: #1e40af; /* Azul oscuro */
                 <div class="flex items-center">
                     <i class='bx bx-check-circle text-3xl mr-4 text-green-400'></i>
                     <div>
-                        <h3 class="text-2xl font-bold">{{ $solicitudes_general->where('estado_detallado',
-                            'Aprobada')->count()
+                        <h3 class="text-2xl font-bold">{{ $solicitudes_general->where('estatus', 2)->count()
                             }}</h3>
                         <p class="text-blue-100">Aprobadas</p>
                     </div>
@@ -53,8 +91,7 @@ color: #1e40af; /* Azul oscuro */
                 <div class="flex items-center">
                     <i class='bx bx-time-five text-3xl mr-4 text-orange-500'></i>
                     <div>
-                        <h3 class="text-2xl font-bold">{{ $solicitudes_general->where('estado_detallado',
-                            'Pendiente')->count()
+                        <h3 class="text-2xl font-bold">{{ $solicitudes_general->where('estatus', 1)->count()
                             }}</h3>
                         <p class="text-blue-100 ">Pendientes</p>
                     </div>
@@ -144,10 +181,6 @@ color: #1e40af; /* Azul oscuro */
                        whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-150">
                         Cumpleañeros
                     </button>
-                    <button wire:click="$set('activeTab', 'configuracion')" class="{{ $activeTab === 'configuracion' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700' }} 
-                       whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-150">
-                        Configuración
-                    </button>
                 </nav>
             </div>
 
@@ -193,8 +226,8 @@ color: #1e40af; /* Azul oscuro */
                         </h2>
                         <div class="space-y-4">
                             @foreach($solicitudes_pendientes as $solicitud)
-                            <div
-                                class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors" title="{{$solicitud->titulo}}">
+                            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                                title="{{$solicitud->titulo}}">
                                 <div class="flex items-center">
                                     <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
                                         <i class='bx bx-file-blank text-blue-600 text-sm'></i>
@@ -318,12 +351,13 @@ color: #1e40af; /* Azul oscuro */
                                 </td>
                                 <td class="px-6 py-3 whitespace-nowrap text-sm">
                                     <select
-                                        wire:change="updateSolicitudStatus({{ $solicitud->solicitud_id }}, $event.target.value)"
+                                        wire:change="updateSolicitudStatus('{{ $solicitud->solicitud_id }}', $event.target.value)"
                                         class="text-xs border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-150 py-1 px-2 font-semibold
                                         {{$solicitud->estatus === 1 ? 'bg-yellow-100 text-yellow-800' : ($solicitud->estatus === 2 ? 'bg-green-100 text-green-800' : ($solicitud->estatus === 3 ? 'bg-red-100 text-red-800' : ''))}}
                                         ">
                                         @foreach ($estatusSolicitud as $estatus)
-                                            <option value="{{$estatus->estatus_id}}" {{ $estatus->estatus_id === $solicitud->estatus
+                                        <option value="{{$estatus->estatus_id}}" {{ $estatus->estatus_id ===
+                                            $solicitud->estatus
                                             ?'selected' : '' }}>{{$estatus->getEstatusFormattedAttribute()}}</option>
                                         @endforeach
                                     </select>
@@ -433,10 +467,10 @@ color: #1e40af; /* Azul oscuro */
                     <h4 class="font-semibold text-gray-900 mb-4">Solicitudes por Categoría</h4>
                     <div class="space-y-3">
                         @foreach ($categorias as $categoria)
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">{{$categoria->getCategoriaFormattedAttribute()}}</span>
-                                <span class="text-sm font-medium text-blue-600">{{ $categoria->solicitudes->count()}}</span>
-                            </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">{{$categoria->getCategoriaFormattedAttribute()}}</span>
+                            <span class="text-sm font-medium text-blue-600">{{ $categoria->solicitudes->count()}}</span>
+                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -493,89 +527,90 @@ color: #1e40af; /* Azul oscuro */
         @endif
 
         @if($activeTab === 'cumpleañeros')
-             <div class="mt-8 bg-white rounded-xl shadow-2xl p-6 md:p-8 border border-gray-100">
+        <div class="mt-8 bg-white rounded-xl shadow-2xl p-6 md:p-8 border border-gray-100">
 
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4">
 
-                    <div>
-                        <h2 class="text-2xl font-extrabold text-gray-900 flex items-center mb-4 sm:mb-0">
-                            <i class='bx bx-cake text-blue-600 mr-3 text-3xl'></i>
-                            Trabajadores Cumpleañeros
-                        </h2>
-                        <p class="text-sm text-gray-600 ml-2">Las 5 personas más cercanas a la fecha</p>
-                    </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-900 flex items-center mb-4 sm:mb-0">
+                        <i class='bx bx-cake text-blue-600 mr-3 text-3xl'></i>
+                        Trabajadores Cumpleañeros
+                    </h2>
+                    <p class="text-sm text-gray-600 ml-2">Las 5 personas más cercanas a la fecha</p>
                 </div>
+            </div>
 
-                <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-inner">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-blue-50">
-                            <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
-                                    Cédula
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
-                                    Nombre
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
-                                    Cargo
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
-                                    Nacimiento
-                                </th>
-                            </tr>
-                        </thead>
+            <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-inner">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-blue-50">
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
+                                Cédula
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
+                                Nombre
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
+                                Cargo
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-blue-800">
+                                Nacimiento
+                            </th>
+                        </tr>
+                    </thead>
 
-                        <tbody class="divide-y divide-gray-100 bg-white">
-                            @foreach($cumpleaneros->take(5) as $cumpleanero)
-                                @php
-                                    $persona = $cumpleanero->persona;
-                                    // La línea que calcula la fecha de nacimiento no necesita cambios
-                                    $fechaNacimiento = $persona && $persona->nacimiento ? \Carbon\Carbon::parse($persona->nacimiento) : null;
-                                    $hoy = \Carbon\Carbon::now();
-                                    $diasRestantes = 9999;
-                                    
-                                    if ($fechaNacimiento) {
-                                        $cumpleEsteAno = $fechaNacimiento->copy()->year($hoy->year);
-                                        
-                                        // Si el cumpleaños ya pasó este año y no es hoy, se mueve al próximo año
-                                        if ($cumpleEsteAno->isPast() && !$cumpleEsteAno->isToday()) {
-                                            $cumpleEsteAno->addYear();
-                                        }
-                                        
-                                        // --- LA CORRECCIÓN ESTÁ AQUÍ ---
-                                        // Usamos intval() para convertir el resultado flotante a un entero.
-                                        $diasRestantes = intval($hoy->diffInDays($cumpleEsteAno));
-                                        // O podrías usar floor($hoy->diffInDays($cumpleEsteAno)) para el mismo efecto.
-                                    }
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                        @foreach($cumpleaneros->take(5) as $cumpleanero)
+                        @php
+                        $persona = $cumpleanero->persona;
+                        // La línea que calcula la fecha de nacimiento no necesita cambios
+                        $fechaNacimiento = $persona && $persona->nacimiento ?
+                        \Carbon\Carbon::parse($persona->nacimiento) : null;
+                        $hoy = \Carbon\Carbon::now();
+                        $diasRestantes = 9999;
 
-                                    $rowClass = '';
-                                    if ($diasRestantes === 0) {
-                                        $rowClass = 'birthday-today-row';
-                                    } elseif ($diasRestantes <= 30) {
-                                        $rowClass = 'bg-blue-50';
-                                    }
-                                    
-                                    $nombre_completo = trim($persona->nombre . ' ' . $persona->segundo_nombre . ' ' . $persona->apellido . ' ' . $persona->segundo_apellido);
-                                @endphp
+                        if ($fechaNacimiento) {
+                        $cumpleEsteAno = $fechaNacimiento->copy()->year($hoy->year);
+
+                        // Si el cumpleaños ya pasó este año y no es hoy, se mueve al próximo año
+                        if ($cumpleEsteAno->isPast() && !$cumpleEsteAno->isToday()) {
+                        $cumpleEsteAno->addYear();
+                        }
+
+                        // --- LA CORRECCIÓN ESTÁ AQUÍ ---
+                        // Usamos intval() para convertir el resultado flotante a un entero.
+                        $diasRestantes = intval($hoy->diffInDays($cumpleEsteAno));
+                        // O podrías usar floor($hoy->diffInDays($cumpleEsteAno)) para el mismo efecto.
+                        }
+
+                        $rowClass = '';
+                        if ($diasRestantes === 0) {
+                        $rowClass = 'birthday-today-row';
+                        } elseif ($diasRestantes <= 30) { $rowClass='bg-blue-50' ; } $nombre_completo=trim($persona->
+                            nombre . ' ' . $persona->segundo_nombre . ' ' . $persona->apellido . ' ' .
+                            $persona->segundo_apellido);
+                            @endphp
                             <tr class="hover:bg-blue-50 transition duration-150 ease-in-out {{ $rowClass }}">
                                 <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                                     {{ $cumpleanero->persona_cedula }}
                                 </td>
                                 <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-700">
                                     @if($diasRestantes === 0)
-                                        <span class="text-yellow-700 font-bold">🎂 
-                                    {{ $cumpleanero->persona->nombre ?? 'N/A' }} {{ $cumpleanero->persona->apellido ?? '' }}</span>
-                                    @elseif($diasRestantes <= 7)
-                                        <span class="text-blue-700">🎁 
-                                    {{ $cumpleanero->persona->nombre ?? 'N/A' }} {{ $cumpleanero->persona->apellido ?? '' }}</span>
-                                    @else
-                                        
-                                    {{ $cumpleanero->persona->nombre ?? 'N/A' }} {{ $cumpleanero->persona->apellido ?? '' }}
-                                    @endif
+                                    <span class="text-yellow-700 font-bold">🎂
+                                        {{ $cumpleanero->persona->nombre ?? 'N/A' }} {{ $cumpleanero->persona->apellido
+                                        ?? '' }}</span>
+                                    @elseif($diasRestantes <= 7) <span class="text-blue-700">🎁
+                                        {{ $cumpleanero->persona->nombre ?? 'N/A' }} {{ $cumpleanero->persona->apellido
+                                        ?? '' }}</span>
+                                        @else
+
+                                        {{ $cumpleanero->persona->nombre ?? 'N/A' }} {{ $cumpleanero->persona->apellido
+                                        ?? '' }}
+                                        @endif
                                 </td>
                                 <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-700">
                                     {{ $cumpleanero->cargo['descripcion'] ?? 'N/A' }}
@@ -585,73 +620,22 @@ color: #1e40af; /* Azul oscuro */
                                 </td>
                             </tr>
                             @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
-        @endif
-
-
-        @if($activeTab === 'configuracion')
-        <div class="mt-8 bg-white rounded-xl shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <i class='bx bx-shield text-blue-600 mr-3'></i>
-                Configuración del Sistema
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-blue-50 rounded-lg p-6">
-                    <h4 class="font-semibold text-gray-900 mb-4">Configuración General</h4>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del Sistema</label>
-                            <input type="text" value="Sistema Municipal CMBEY"
-                                class="w-full p-2 border border-gray-300 rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Email de Contacto</label>
-                            <input type="email" value="admin@cmbey.gob.ve"
-                                class="w-full p-2 border border-gray-300 rounded-lg">
-                        </div>
-                        <button
-                            class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                            Guardar Configuración
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-blue-50 rounded-lg p-6">
-                    <h4 class="font-semibold text-gray-900 mb-4">Estadísticas del Sistema</h4>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Versión:</span>
-                            <span class="text-sm font-medium text-blue-600">1.0.0</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Última Actualización:</span>
-                            <span class="text-sm font-medium text-blue-600">{{ now()->format('d/m/Y') }}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Base de Datos:</span>
-                            <span class="text-sm font-medium text-green-600">Conectada</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        @endif
     </div>
-    <div x-data="{ show: true }" class="z-50">
-        <buttom @click="iniciarTour()" x-show="show"
-            class="fixed bottom-6 right-6  text-gray-700 text-4xl rounded-full shadow-xl flex items-center justify-center cursor-pointer z-50 transition-transform transform hover:scale-110">
-            <i class='bx bxs-help-circle'></i>
-        </buttom>
-    </div>
+    @endif
+</div>
+<div x-data="{ show: true }" class="z-50">
+    <buttom @click="iniciarTour()" x-show="show"
+        class="fixed bottom-6 right-6  text-gray-700 text-4xl rounded-full shadow-xl flex items-center justify-center cursor-pointer z-50 transition-transform transform hover:scale-110">
+        <i class='bx bxs-help-circle'></i>
+    </buttom>
+</div>
 
-    <script>
-        function iniciarTour() {
+<script>
+    function iniciarTour() {
             
             const driver = window.driver.js.driver;
 
@@ -717,5 +701,5 @@ color: #1e40af; /* Azul oscuro */
 
             driverObj.drive(); 
         }
-    </script>
+</script>
 </div>

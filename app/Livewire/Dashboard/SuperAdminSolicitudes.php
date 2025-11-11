@@ -41,7 +41,8 @@ class SuperAdminSolicitudes extends Component
 
     public $personalData = [
         'cedula' => '',
-        'nombre_completo' => '',
+        'nombre' => '',
+        'apellido' => '',
         'telefono' => '',
         'prefijo' => '',
         'email' => '',
@@ -75,10 +76,26 @@ class SuperAdminSolicitudes extends Component
 
     public function rules()
     {
+        if($this->editingSolicitud){
+            return [
+                'solicitud.titulo' => 'required|min:5|max:50',
+                'solicitud.solicitudCategoria.categoria' => 'required|exists:categorias,categoria',
+                'solicitud.solicitudCategoria.subcategoria' => 'required|exists:sub_categorias,subcategoria',
+                'solicitud.solicitudParroquia.parroquia' => 'required|exists:parroquias,parroquia',
+                'solicitud.solicitudParroquia.comunidad' => 'required|exists:comunidades,comunidad',
+                'solicitud.direccion_detallada' => 'required|min:10|max:200',
+                'solicitud.descripcion' => 'required|min:25|max:5000',
+                'solicitud.derecho_palabra' => 'boolean',
+                'solicitud.tipo_solicitud' => 'required|in:individual,colectivo_institucional',
+            ];
+        }
+
         return [
-            'personalData.nombre_completo' => 'required|max:50',
-            'personalData.cedula' => 'required|min:7|max:8',
-            'personalData.telefono' => 'required|max:' . ($this->editingSolicitud ? '13' : '8'),
+            'personalData.nombre' => 'required|max:25',
+            'personalData.apellido' => 'required|max:25',
+            'personalData.cedula' => 'required|min:7|max:15',
+            'personalData.telefono' => 'required|max:8',
+            'personalData.prefijo' => 'required|in:0412,0422,0414,0424,0416,0426',
             'personalData.email' => 'required|email|max:100',
             'personalData.nacionalidad' => 'required|exists:nacionalidads,id',
 
@@ -95,6 +112,10 @@ class SuperAdminSolicitudes extends Component
     }
 
     protected $messages = [
+        'personalData.nombre.required' => 'El nombre es obligatorio',
+        'personalData.nombre.max' => 'El nombre no puede exceder los 25 caracteres',
+        'personalData.apellido.required' => 'El apellido es obligatorio',
+        'personalData.apellido.max' => 'El apellido no puede exceder los 25 caracteres',
         'personalData.cedula.required' => 'La cédula es obligatoria',
         'personalData.cedula.min' => 'La cédula debe tener al menos 7 caracteres',
         'personalData.cedula.max' => 'La cédula no puede exceder los 8 caracteres',
@@ -103,8 +124,6 @@ class SuperAdminSolicitudes extends Component
         'personalData.email.max' => 'El correo electrónico no puede exceder los 100 caracteres',
         'personalData.telefono.required' => 'El teléfono es obligatorio',
         'personalData.telefono.max' => 'El teléfono no puede exceder los 13 caracteres',
-        'personalData.nombre_completo.required' => 'El nombre completo es obligatorio',
-        'personalData.nombre_completo.max' => 'El nombre completo no puede exceder los 50 caracteres',
         'personalData.nacionalidad.required' => 'La nacionalidad es obligatorio',
         'personalData.nacionalidad.exists' => 'La nacionalidad no existe en nuestra base de datos',
 
@@ -220,7 +239,12 @@ class SuperAdminSolicitudes extends Component
 
     public function submit()
     {
-        $this->validate(); 
+
+        if(!$this->solicitud['titulo']){
+            return;
+        }
+
+        $this->validate();
         
         try {
             if ($this->editingSolicitud && Auth::user()->isSuperAdministrador()) {
@@ -269,7 +293,8 @@ class SuperAdminSolicitudes extends Component
                 if (!$persona) {
                     Personas::create([
                         'cedula' => $this->personalData['cedula'],
-                        'nombre' => $this->personalData['nombre_completo'],
+                        'nombre' => $this->personalData['nombre'],
+                        'apellido' => $this->personalData['apellido'],
                         'telefono' => $this->personalData['prefijo'] . '-' . $this->personalData['telefono'],
                         'email' => $this->personalData['email'],
                         'nacionalidad' => $this->personalData['nacionalidad'],
@@ -351,7 +376,8 @@ class SuperAdminSolicitudes extends Component
 
         $this->personalData = [
             'cedula' => $solicitud->persona->cedula,
-            'nombre_completo' => ($solicitud->persona->nombre ?? '') . ' ' . ($solicitud->persona->apellido ?? ''), 
+            'nombre' => ($solicitud->persona->nombre ?? ''), 
+            'apellido' => ($solicitud->persona->apellido ?? ''),
             'telefono' => $solicitud->persona->telefono,
             'email' => $solicitud->persona->email,
             'nacionalidad' => $solicitud->persona->nacionalidad,
@@ -389,7 +415,7 @@ class SuperAdminSolicitudes extends Component
 
     public function viewSolicitud($solicitudId)
     {
-        $this->showSolicitud = Solicitud::with(['persona', 'subcategoriaRelacion', 'comunidadRelacion', 'estatusRelacion', 'visitasRelacion', 'reunionRelacion'])
+        $this->showSolicitud = Solicitud::with(['persona', 'subcategoriaRelacion', 'comunidadRelacion', 'estatusRelacion', 'reunionRelacion'])
             ->find($solicitudId);
         
         if (!$this->showSolicitud) {
@@ -539,7 +565,8 @@ class SuperAdminSolicitudes extends Component
     {
         $this->personalData = [
             'cedula' => '',
-            'nombre_completo' => '',
+            'nombre' => '',
+            'apellido' => '',
             'telefono' => '',
             'prefijo' => '',
             'email' => '',
@@ -718,7 +745,7 @@ class SuperAdminSolicitudes extends Component
             [
                 'N° Ticket' => 'Registro Generado el:',
                 'Título' => now()->format('d-m-Y H:i'),
-                'Descripcion' => '', 'Estatus' => '', 'Categoría' => '', 'Subcategoría' => '',
+                'Descripcion' => 'Reporte generado por el sistema de gestión de solicitudes del CMBEY', 'Estatus' => '', 'Categoría' => '', 'Subcategoría' => '',
                 'Tipo de Solicitud' => '', 'Derecho de Palabra' => '', 'Solicitante' => '', 'Cédula' => '', 
                 'País' => '', 'Estado/Región' => '', 'Municipio' => '', 'Parroquia' => '', 'Comunidad' => '', 'Dirección' => '', 
                 'Observaciones Administrativas' => '', 'Asignación a Visitas' => '', 'Fecha de Creación' => '',
@@ -817,7 +844,8 @@ class SuperAdminSolicitudes extends Component
 
         $this->personalData = [
             'cedula' => $solicitante->cedula,
-            'nombre_completo' => $solicitante->nombre . ' ' . $solicitante->apellido,
+            'nombre' => $solicitante->nombre,
+            'apellido' => $solicitante->apellido,
             'telefono' => ($telefono[1].'-'.$telefono[2]) ?? $solicitante->telefono,
             'prefijo' => $telefono[0],
             'email' => $solicitante->email,

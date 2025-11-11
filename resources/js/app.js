@@ -6,6 +6,8 @@ import toast from 'vanilla-toast';
 import {driver} from 'driver.js'
 import Chart from 'chart.js/auto';
 
+import 'boxicons/css/boxicons.min.css';
+
 window.toast = toast;
 window.Chart = Chart;
 
@@ -49,9 +51,41 @@ window.addEventListener('error-toast', e => {
     });
 });
 
+/**
+ * 
+ * @param {string} canvasId
+ */
+window.generarPDF = function (canvasId) {
 
+    const miGrafico = charts[canvasId];
+
+    if (!miGrafico) {
+        console.error(`No se logro imprimir el reporte`);
+        return;
+    }
+
+    const chartDataURL = miGrafico.canvas.toDataURL('image/png');
+
+    if (canvasId === 'chart1') {
+        Livewire.dispatch('generate-pdf-event-chart1', { dataUrl: chartDataURL });
+    }
+
+    if (canvasId === 'chart2') {
+        Livewire.dispatch('generate-pdf-event-chart2', { dataUrl: chartDataURL });
+    }
+
+    if (canvasId === 'chart3') {
+        Livewire.dispatch('generate-pdf-event-chart3', { dataUrl: chartDataURL });
+    }
+
+    if (canvasId === 'chart4') {
+        Livewire.dispatch('generate-pdf-event-chart4', { dataUrl: chartDataURL });
+    }
+    
+};
+
+// GRAFICAS DE REPORTES
 const charts = {};
-
 function crearGrafico(canvasId, tipo, labels, values, titulo, borderColor, bgColor) {
   const ctx = document.getElementById(canvasId);
 

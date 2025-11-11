@@ -52,4 +52,5 @@ use Carbon\Carbon;
     </table>
 </div>
 
+<p style="color:#3333335b; margin-top: 50px; text-align: center;">Reporte generado por el sistema de gestión de solicitudes del CMBEY</p>
 <div style="page-break-after: always;"></div>

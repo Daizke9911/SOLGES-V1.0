@@ -13,7 +13,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
                 <div class="flex items-center">
-                    <i class='bx bx-file-blank text-3xl mr-4'></i>
+                    <i class='bx bx-file-blank text-3xl mr-4 text-gray-400'></i>
                     <div>
                         <h3 class="text-2xl font-bold">{{ $solicitudes->count() }}</h3>
                         <p class="text-blue-100">Total Solicitudes</p>
@@ -22,7 +22,7 @@
             </div>
             <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
                 <div class="flex items-center">
-                    <i class='bx bx-check-circle text-3xl mr-4'></i>
+                    <i class='bx bx-check-circle text-3xl mr-4 text-green-400'></i>
                     <div>
                         <h3 class="text-2xl font-bold">{{ $solicitudes->where('estatus', 2)->count() }}</h3>
                         <p class="text-blue-100">Aprobadas</p>
@@ -31,16 +31,16 @@
             </div>
             <div class="bg-gradient-to-r from-blue-700 to-blue-800 rounded-xl p-6 text-white shadow-lg">
                 <div class="flex items-center">
-                    <i class='bx bx-time-five text-3xl mr-4'></i>
+                    <i class='bx bx-time-five text-3xl mr-4 text-yellow-400'></i>
                     <div>
-                        <h3 class="text-2xl font-bold">{{ $solicitudes->where('estatus', 3)->count() }}</h3>
+                        <h3 class="text-2xl font-bold">{{ $solicitudes->where('estatus', 1)->count() }}</h3>
                         <p class="text-blue-100">Pendientes</p>
                     </div>
                 </div>
             </div>
             <div class="bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl p-6 text-white shadow-lg">
                 <div class="flex items-center">
-                    <i class='bx bx-calendar-check text-3xl mr-4'></i>
+                    <i class='bx bx-calendar-check text-3xl mr-4 text-teal-400'></i>
                     <div>
                         <h3 class="text-2xl font-bold">{{ $visitas->count() }}</h3>
                         <p class="text-blue-100">Total Visitas</p>
@@ -131,16 +131,13 @@
                                         <i class='bx bx-calendar-check text-blue-600'></i>
                                     </div>
                                     <div>
-                                        <h3 class="font-medium text-gray-900">{{ $visita->titulo ?? 'Visita Municipal' }}</h3>
                                         <p class="text-sm text-gray-600">{{ $visita->persona->nombre ?? 'Usuario' }} {{ $visita->persona->apellido ?? '' }}</p>
-                                        <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($visita->fecha)->format('d/m/Y H:i') }}</p>
+                                        <div class="flex items-center">                                            <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($visita->visita->fecha_inicial)->format('d/m/Y') }}</p> - <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($visita->fecha_final)->format('d/m/Y') }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <span class="px-3 py-1 rounded-full text-xs font-medium
-                                    @if($visita->estado === 'Programada') bg-blue-100 text-blue-800
-                                    @elseif($visita->estado === 'Realizada') bg-green-100 text-green-800
-                                    @else bg-red-100 text-red-800 @endif">
-                                    {{ $visita->estado }}
+                                <span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    {{ $visita->visita->estatus->getEstatusFormattedAttribute() }}
                                 </span>
                             </div>
                         @endforeach
@@ -179,7 +176,7 @@
                                         <p class="text-gray-600 mb-3">{{ Str::limit($solicitud->descripcion, 150) }}</p>
                                         <div class="flex flex-wrap gap-4 text-sm text-gray-500">
                                             <span><i class='bx bx-user mr-1'></i>{{ $solicitud->persona->nombre ?? 'Usuario' }} {{ $solicitud->persona->apellido ?? '' }}</span>
-                                            <span><i class='bx bx-category mr-1'></i>{{ $solicitud->categoria ?? 'Sin categoría' }}</span>
+                                            <span><i class='bx bx-category mr-1'></i>{{ $solicitud->subcategoriaRelacion->getCategoriaFormattedAttribute() ?? 'Sin categoría' }}</span>
                                             <span><i class='bx bx-map mr-1'></i>{{ Str::limit($solicitud->direccion_detallada ?? $solicitud->direccion, 30) }}</span>
                                             <span><i class='bx bx-calendar mr-1'></i>{{ $solicitud->fecha_creacion->format('d/m/Y H:i') }} </span>
                                         </div>
@@ -221,19 +218,16 @@
                             <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
                                 <div class="flex justify-between items-start">
                                     <div>
-                                        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $visita->titulo ?? 'Visita Municipal' }}</h3>
-                                        <p class="text-gray-600 mb-3">{{ $visita->descripcion ?? 'Sin descripción' }}</p>
+                                        <p class="text-gray-600 mb-3">{{ $visita->visita->observacion ?? 'Sin observaciones' }}</p>
                                         <div class="flex flex-wrap gap-4 text-sm text-gray-500">
-                                            <span><i class='bx bx-user mr-1'></i>{{ $visita->persona->nombre ?? 'Usuario' }} {{ $visita->persona->apellido ?? '' }}</span>
-                                            <span><i class='bx bx-calendar mr-1'></i>{{ \Carbon\Carbon::parse($visita->fecha)->format('d/m/Y H:i') }}</span>
-                                            <span><i class='bx bx-category mr-1'></i>{{ $visita->ambito->titulo ?? 'Sin ámbito' }}</span>
+                                            <span><i class='bx bx-user mr-1'></i>{{ $visita->persona->nombre ?? 'Usuario' }} {{ $visita->persona->apellido ?? '' }}</span>                                        
+                                            <div class="flex items-center">
+                                                <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($visita->visita->fecha_inicial)->format('d/m/Y') }}</p> - <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($visita->visita->fecha_final)->format('d/m/Y') }}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <span class="px-3 py-1 rounded-full text-xs font-medium
-                                        @if($visita->estado === 'Programada') bg-blue-100 text-blue-800
-                                        @elseif($visita->estado === 'Realizada') bg-green-100 text-green-800
-                                        @else bg-red-100 text-red-800 @endif">
-                                        {{ $visita->estado }}
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ $visita->visita->estatus->getEstatusFormattedAttribute() }}
                                     </span>
                                 </div>
                             </div>

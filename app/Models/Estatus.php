@@ -61,9 +61,12 @@ class Estatus extends Model
         };
     }
 
-    /**
-     * Get formatted estatus name
-     */
+    public function visitastable()
+    {
+       
+        return $this->hasMany(VisitasVisita::class, 'estatus_id', 'estatus_id');
+    }
+
     public function getEstatusFormattedAttribute()
     {
         return $this->estatus = Str::ucfirst($this->estatus);

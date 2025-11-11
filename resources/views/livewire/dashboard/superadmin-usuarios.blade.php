@@ -47,11 +47,6 @@
                     
                     <div class="flex flex-col sm:flex-row items-center gap-4">
                         <div class="flex space-x-2">
-                            <button wire:click="$set('currentStep' , 'charts')" type="button"
-                                class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
-                                title="Exportar a PDF">
-                                <i class='bx bxs-file-pdf text-2xl'></i>
-                            </button>
 
                             <button wire:click="exportPdf" type="button"
                                 class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"

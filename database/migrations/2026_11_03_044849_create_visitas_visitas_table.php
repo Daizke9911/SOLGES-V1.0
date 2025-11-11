@@ -12,15 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('visitas_visitas', function (Blueprint $table) {
-            $table->id();
-            $table->string('solicitud_id');
-            $table->integer('programada_anio');
-            $table->integer('programada_mes');
-            $table->integer('programada_dia');
+            $table->string('solicitud_id')->primary();
+            $table->date('fecha_inicial');
+            $table->date('fecha_final');
             $table->unsignedBigInteger('estatus_id');
-            $table->text('descripcion');
-            $table->text('observacion');
-
+            $table->text('observacion')->nullable();
             $table->foreign('solicitud_id')->references('solicitud_id')->on('solicitudes')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('estatus_id')->references('estatus_id')->on('estatus')->onUpdate('cascade')->onDelete('cascade');
             $table->softDeletes();

@@ -1,18 +1,6 @@
 <div class="p-6 flex justify-center w-full items-center" x-data="{ showImport: false }">
     <div class="max-w-2xl w-full space-y-6">
 
-        @if($message)
-            <div class="p-4 rounded-lg {{ $messageType === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}"
-                 x-data="{ show: true }"
-                 x-show="show"
-                 x-init="setTimeout(() => show = false, 5000)">
-                <div class="flex items-center">
-                    <i class='bx {{ $messageType === 'success' ? 'bx-check-circle' : 'bx-error-circle' }} text-2xl mr-2'></i>
-                    <span>{{ $message }}</span>
-                </div>
-            </div>
-        @endif
-
         <div class="bg-white rounded-xl shadow-lg p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center justify-center border-b pb-4">
                 <i class='bx bx-export text-blue-600 mr-3 text-3xl'></i>
@@ -43,6 +31,19 @@
                 <i class='bx bx-loader-alt bx-spin mr-1'></i> Generando respaldo, por favor espera...
             </div>
         </div>
+
+
+        @if($message)
+            <div class="p-4 rounded-lg {{ $messageType === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}"
+                 x-data="{ show: true }"
+                 x-show="show"
+                 x-init="setTimeout(() => show = false, 5000)">
+                <div class="flex items-center">
+                    <i class='bx {{ $messageType === 'success' ? 'bx-check-circle' : 'bx-error-circle' }} text-2xl mr-2'></i>
+                    <span>{{ $message }}</span>
+                </div>
+            </div>
+        @endif
 
         <div class="bg-white rounded-xl shadow-lg p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center justify-center border-b pb-4">
@@ -94,7 +95,7 @@
                                     <p class="text-sm text-gray-600">{{ number_format($importFile->getSize() / 1024, 2) }} KB</p>
                                 </div>
                             </div>
-                            <button type="button" wire:click="$set('importFile', null)"
+                            <button type="button" wire:click="cancelarImportacion"
                                 class="text-red-600 hover:text-red-800">
                                 <i class='bx bx-x text-2xl'></i>
                             </button>
@@ -108,21 +109,21 @@
                         
                         <div class="grid grid-cols-2 gap-3">
                             <label class="relative flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50
-                                   {{ $importFile === 'sql' ? 'border-blue-600 bg-blue-50' : 'border-gray-300' }}">
-                                <input type="radio" wire:model="importDatabase" value="sql" class="sr-only">
-                                <i class='bx bxs-file-doc text-2xl mr-2 {{ $importFile === 'sql' ? 'text-blue-600' : 'text-gray-400' }}'></i>
-                                <span class="font-medium {{ $importFile === 'sql' ? 'text-blue-600' : 'text-gray-700' }}">SQL</span>
+                                   {{ $importType === 'sql' ? 'border-blue-600 bg-blue-50' : 'border-gray-300' }}">
+                                <input type="radio" wire:model.live="importType" value="sql" class="sr-only">
+                                <i class='bx bxs-file-doc text-2xl mr-2 {{ $importType === 'sql' ? 'text-blue-600' : 'text-gray-400' }}'></i>
+                                <span class="font-medium {{ $importType === 'sql' ? 'text-blue-600' : 'text-gray-700' }}">SQL</span>
                             </label>
 
                             <label class="relative flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50
-                                   {{ $importFile === 'json' ? 'border-green-600 bg-green-50' : 'border-gray-300' }}">
-                                <input type="radio" wire:model="importDatabase" value="json" class="sr-only">
-                                <i class='bx bxs-file-json text-2xl mr-2 {{ $importFile === 'json' ? 'text-green-600' : 'text-gray-400' }}'></i>
-                                <span class="font-medium {{ $importFile === 'json' ? 'text-green-600' : 'text-gray-700' }}">JSON</span>
+                                   {{ $importType === 'json' ? 'border-green-600 bg-green-50' : 'border-gray-300' }}">
+                                <input type="radio" wire:model.live="importType" value="json" class="sr-only">
+                                <i class='bx bxs-file-json text-2xl mr-2 {{ $importType === 'json' ? 'text-green-600' : 'text-gray-400' }}'></i>
+                                <span class="font-medium {{ $importType === 'json' ? 'text-green-600' : 'text-gray-700' }}">JSON</span>
                             </label>
                         </div>
 
-                        @error('importFile')
+                        @error('importType')
                             <p class="text-red-600 text-sm">{{ $message }}</p>
                         @enderror
                     </div>

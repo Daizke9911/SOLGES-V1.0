@@ -19,44 +19,6 @@
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" x-data="{ showChart: 1 }">
 
-    {{-- BOTONES SUPERIORES --}}
-<!--     <div class="gap-x-4 lg:flex max-lg:mt-2 max-lg:grid max-lg:grid-cols-4" x-data="{active: 0}">
-      <button class="w-full py-4 text-center max-sm:text-sm border-2 rounded flex items-center justify-center"
-        wire:click="cambiarVista(0)" @click="active = 0" :class="{
-              'bg-blue-50 text-blue-800 scale-105 shadow-xl border-blue-600': active == 0,
-              'bg-white text-gray-600 border-zinc-100 shadow-lg hover:shadow-xl transition-all duration-300 transform border-transparent hover:text-blue-800 hover:border-blue-500': active > 0
-          }">
-        <i class='bx bx-file-blank text-xl lg:mr-2 border-2 rounded-full p-2'
-          :class="{'border-gray-600 hover:border-blue-500': active > 0, 'border-blue-600 bg-white': active == 0}"></i>
-        <span class="max-lg:hidden">Solicitudes</span>
-      </button>
-      <button class="w-full py-4 text-center max-sm:text-sm border-2 rounded flex items-center justify-center"
-        wire:click="cambiarVista(1)" @click="active = 1" :class="{
-              'bg-blue-50 text-blue-800 scale-105 shadow-xl border-blue-600': active == 1,
-              'bg-white text-gray-600 border-zinc-100 shadow-lg hover:shadow-xl transition-all duration-300 transform border-transparent hover:text-blue-800 hover:border-blue-500': active != 1
-          }">
-        <i class='bx bx-calendar-check text-xl lg:mr-2 border-2 rounded-full p-2'
-          :class="{'border-gray-600 hover:border-blue-500': active > 1, 'border-blue-600 bg-white': active == 1}"></i>
-        <span class="max-lg:hidden">Visitas</span></button>
-      <button class="w-full py-4 text-center max-sm:text-sm border-2 rounded flex items-center justify-center"
-        wire:click="cambiarVista(2)" @click="active = 2" :class="{
-              'bg-blue-50 text-blue-800 scale-105 shadow-xl border-blue-600': active == 2,
-              'bg-white text-gray-600 border-zinc-100 shadow-lg hover:shadow-xl transition-all duration-300 transform border-transparent hover:text-blue-800 hover:border-blue-500': active != 2
-          }">
-        <i class='bx bx-show text-lg lg:mr-2 border-2 rounded-full p-2'
-          :class="{'border-gray-600 hover:border-blue-500': active > 2, 'border-blue-600 bg-white': active == 2}"></i>
-        <span class="max-lg:hidden">Reuniones</span></button>
-      <button class="w-full py-4 text-center max-sm:text-sm border-2 rounded flex items-center justify-center"
-        wire:click="cambiarVista(3)" @click="active = 3" :class="{
-              'bg-blue-50 text-blue-800 scale-105 shadow-xl border-blue-600': active == 3,
-              'bg-white text-gray-600 border-zinc-100 shadow-lg hover:shadow-xl transition-all duration-300 transform border-transparent hover:text-blue-800 hover:border-blue-500': active != 3
-          }">
-        <i class='bx bx-user text-xl lg:mr-2 border-2 rounded-full p-2'
-          :class="{'border-gray-600 hover:border-blue-500': active > 3, 'border-blue-600 bg-white': active == 3}"></i>
-        <span class="max-lg:hidden">Usuarios</span></button>
-    </div> -->
-
-
     @if ($showVista === 0)
     {{-- GRAFICA SOLICITUDES 1 --}}
     <div class="relative w-full overflow-hidden">
@@ -74,6 +36,11 @@
               <h2 class="text-lg lg:text-xl lg:ml-10 my-auto font-bold text-gray-900 max-lg:ml-0 max-lg:text-center">
                 Reporte de Solicitudes</h2>
               <div class="flex justify-center items-center gap-4">
+                <button type="button" onclick="generarPDF('chart1')"
+                    class="w-12 h-12 border border-gray-300 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Exportar a PDF">
+                    <i class='bx bxs-file-pdf text-2xl'></i>
+                </button>
                 <div class="relative" x-data="{selectActive: 0}">
                   <div
                     class="w-full h-full py-2 px-1 rounded-lg flex items-center justify-center cursor-pointer transition-colors border border-gray-300
@@ -239,7 +206,7 @@
             </div>
 
             <div class="bg-blue-50/50 rounded-xl p-6 border border-white hover:shadow-sm hover:border-blue-100">
-              <h3 class="text-md font-bold flex items-center justify-center">Solicitudes Asignadas</h3>
+              <h3 class="text-md font-bold flex items-center justify-center">Solicitudes Asignadas a Visitas</h3>
               <div class="flex items-center justify-between">
                 <div class="flex flex-col pt-1">
                   <span class="text-gray-800 pt-1">Total de Solicitudes: </span>
@@ -267,6 +234,11 @@
             <h2 class="text-lg lg:text-xl lg:ml-10 my-5 font-bold text-gray-900 max-lg:mx-auto max-lg:text-center">
               Historial de Solicitudes</h2>
             <div class="flex justify-end mt-3 gap-4">
+              <button type="button" onclick="generarPDF('chart2')"
+                  class="w-12 h-12 border border-gray-300 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Exportar a PDF">
+                  <i class='bx bxs-file-pdf text-2xl'></i>
+              </button>
               <button @click="showChart = 1"
                 class="w-10 h-10 rounded-3xl shadow-md text-white font-bold transition duration-300 flex items-center justify-center"
                 :class="{ 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-900': showChart === 2, 'bg-gray-400': showChart != 2}">
@@ -374,6 +346,11 @@
             <h2 class="text-lg lg:text-xl lg:ml-10 my-5 font-bold text-gray-900 max-lg:mx-auto max-lg:text-center">
               Categorías de las Solicitudes</h2>
             <div class="flex justify-end mt-3 gap-4">
+              <button type="button" onclick="generarPDF('chart3')"
+                  class="w-12 h-12 border border-gray-300 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Exportar a PDF">
+                  <i class='bx bxs-file-pdf text-2xl'></i>
+              </button>
               <button @click="showChart = 2"
                 class="w-10 h-10 rounded-3xl shadow-md text-white font-bold transition duration-300 flex items-center justify-center"
                 :class="{ 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-900': showChart === 3, 'bg-gray-400': showChart != 3}">
@@ -430,7 +407,7 @@
             </div>
 
             <div class="bg-blue-50/50 rounded-xl p-6 border border-white hover:shadow-sm hover:border-blue-100">
-              <h3 class="text-md font-bold flex items-center justify-center">Top 5 SubCategorías</h3>
+              <h3 class="text-md font-bold flex items-center justify-center">Top 5 Subcategorías</h3>
               <div class="flex items-center justify-between">
                 <div class="flex flex-col pt-1">
                   @foreach ($top5Subcategorias as $reporte)
@@ -446,7 +423,7 @@
               </div>
             </div>
             <div class="bg-blue-50/50 rounded-xl p-6 border border-white hover:shadow-sm hover:border-blue-100">
-              <h3 class="text-md font-bold flex items-center justify-center">Ultimos 30 Días</h3>
+              <h3 class="text-md font-bold flex items-center justify-center">Últimos 30 Días</h3>
               <div class="flex items-center justify-between">
                 <div class="flex flex-col pt-1">
                   @foreach ($ultimas5Subcategorias as $reporte)
@@ -477,6 +454,11 @@
             <h2 class="text-lg lg:text-xl lg:ml-10 my-5 font-bold text-gray-900 max-lg:mx-auto max-lg:text-center">
               Ubicación de las Solicitudes</h2>
             <div class="flex justify-end mt-3 gap-4">
+              <button type="button" onclick="generarPDF('chart4')"
+                  class="w-12 h-12 border border-gray-300 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Exportar a PDF">
+                  <i class='bx bxs-file-pdf text-2xl'></i>
+              </button>
               <button @click="showChart = 3"
                 class="w-10 h-10 rounded-3xl shadow-md text-white font-bold transition duration-300 flex items-center justify-center"
                 :class="{ 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-900': showChart === 4, 'bg-gray-400': showChart != 4}">
@@ -514,7 +496,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
 
             <div class="bg-blue-50/50 rounded-xl p-6 border border-white hover:shadow-sm hover:border-blue-100">
-              <h3 class="text-md font-bold flex items-center justify-center">Total de Categorías</h3>
+              <h3 class="text-md font-bold flex items-center justify-center">Total de Parroquias</h3>
               <div class="flex items-center justify-between">
 
                 <div class="flex flex-col pt-1">
@@ -533,7 +515,7 @@
             </div>
 
             <div class="bg-blue-50/50 rounded-xl p-6 border border-white hover:shadow-sm hover:border-blue-100">
-              <h3 class="text-md font-bold flex items-center justify-center">Top 5 SubCategorías</h3>
+              <h3 class="text-md font-bold flex items-center justify-center">Top 5 Comunidades</h3>
               <div class="flex items-center justify-between">
                 <div class="flex flex-col pt-1">
                   @foreach ($top5Comunidades as $reporte)

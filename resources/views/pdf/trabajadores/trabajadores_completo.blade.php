@@ -8,11 +8,46 @@
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th, td { border: 1px solid #000; padding: 5px; text-align: left; word-wrap: break-word; }
         th { background-color: #f0f0f0; }
+
+        .header-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .logo-container {
+            float: left;/
+            width: 200px;
+        }
+
+        .info-container {
+            float: right;
+            text-align: right;/
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .info-container p {
+            margin: 0;
+            line-height: 1.4;
+            color: #838383;
+        }
     </style>
 </head>
 <body>
-    <h1>Reporte Completo de Trabajadores</h1>
-    <p>Generado el: {{ now()->format('d/m/Y H:i:s') }}</p>
+
+    <div class="header-container">
+        <div class="logo-container">
+            <img src="{{ public_path('img/logotipo.png') }}" alt="Logo de mi Aplicación" style="width: 200px;">
+        </div>
+
+        <div class="info-container">
+            <p>Reporte Generado el: {{now()->format('d/m/Y')}}</p>
+            <p>Por: {{ Auth::user()->persona->nombre}} {{Auth::user()->persona->apellido}}</p>
+            <p>{{Auth::user()->persona->nacionalidad === 1 ? 'V' : 'E'}}-{{Auth::user()->persona->cedula}}</p>
+        </div>
+    </div>
+
+    <h1 style="color: #333; text-align: center; margin-top: 100px; ">Reporte Completo de Trabajadores</h1>
 
     <table>
         <thead>
@@ -48,5 +83,6 @@
             @endforeach
         </tbody>
     </table>
+    <p style="color:#3333335b; margin-top: 50px; text-align: center;">Reporte generado por el sistema de gestión de solicitudes del CMBEY</p>
 </body>
 </html>

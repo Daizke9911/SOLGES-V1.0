@@ -141,7 +141,7 @@ class SuperadminUsuarios extends Component
         $this->userOnSesion = Auth()->user()->persona_cedula;
     if ($this->userOnSesion === $cedula) {
         $this->dispatch('error-toast', [
-            'message' => '❌ No puedes eliminar al usuario de la sesión actual.',
+            'message' => 'No puedes eliminar al usuario de la sesión actual.',
             'type' => 'error'
         ]);
         return;

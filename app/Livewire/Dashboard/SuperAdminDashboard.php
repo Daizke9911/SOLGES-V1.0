@@ -5,7 +5,7 @@ namespace App\Livewire\Dashboard;
 use App\Models\User;
 use App\Models\Personas;
 use App\Models\Solicitud;
-use App\Models\Visita;
+use App\Models\VisitasVisita;
 use App\Models\Comunidades;
 use App\Models\Parroquias;
 use App\Models\Cargo;
@@ -13,8 +13,10 @@ use App\Models\Categorias;
 use App\Models\Estatus;
 use App\Models\Institucion;
 use App\Models\Role;
+use App\Models\UserSecurityAnswer;
 use App\Models\Trabajador;
 use App\Models\SubCategorias;
+use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -35,20 +37,37 @@ class SuperAdminDashboard extends Component
     public $selectedVisitor = null;
     public $search = ''; 
     public $searchCumpleaniero = ''; 
+    public $showSecurityNotification = false;
 
     public $comunidades;
 
     protected $paginationTheme = 'tailwind';
 
+
+
+    
+
     public function mount()
     {
         $this->activeTab = request()->get('tab', 'dashboard');
         $this->loadData();
+        if (auth()->check()) {
+            $user = Auth::user();
+            $userId = $user->persona_cedula;
+
+            $hasNoAnswers = UserSecurityAnswer::where('user_cedula', $userId)
+                                              ->doesntExist();
+
+            if ($hasNoAnswers) {
+                $this->showSecurityNotification = true;
+            }
+        }
+       
     }
 
     public function loadData()
     {
-        $this->visitas = Visita::with(['persona'])->orderBy('fecha', 'desc')->get();
+        $this->visitas = VisitasVisita::with(['asistente', 'solicitud'])->orderBy('created_at', 'desc')->get();
         $this->instituciones = Institucion::all();
         $this->roles = Role::all();
     }
@@ -88,8 +107,10 @@ class SuperAdminDashboard extends Component
         });
 
         return $trabajadores->sortBy('dias_restantes')->values();
-
     }
+
+
+    
 
 
     public function changeUserRole($userId, $newRole)
@@ -98,15 +119,14 @@ class SuperAdminDashboard extends Component
         if ($user) {
             $user->role = $newRole;
             $user->save();
-        $this->dispatch('show-toast', [
-        'message' => 'El rol de '. $user->persona_cedula . ' ha sido cambiado' ,
-        'type' => 'success'
-]);
+            $this->dispatch('show-toast', [
+            'message' => 'El rol de '. $user->persona_cedula . ' ha sido cambiado' ,
+            'type' => 'success'
+            ]);
         }else{
-
-         $this->dispatch('error-toast', [
-        'message' => 'El rol de '. $user->persona_cedula . ' no ha podido cambiar' ,
-        'type' => 'success']);
+            $this->dispatch('error-toast', [
+            'message' => 'El rol de '. $user->persona_cedula . ' no ha podido cambiar' ,
+            'type' => 'success']);
         }
     }
 
@@ -118,7 +138,7 @@ class SuperAdminDashboard extends Component
         $solicitud->estatus = $newStatus;
         $solicitud->save();
         $this->dispatch('show-toast', [
-        'message' => 'El rol de  ha sido cambiado' ,
+        'message' => 'El estado de la solicitud ha sido cambiado' ,
         'type' => 'success'
 ]);
         }

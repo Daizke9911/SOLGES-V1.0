@@ -10,6 +10,7 @@
             <p class="mt-2 text-gray-600">Panel de Usuario - Sistema Municipal CMBEY</p>
         </div>
 
+
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
@@ -41,10 +42,42 @@
             </div>
         </div>
 
+        <div>
+            @if ($showSecurityNotification)
+            <div
+                class="bg-orange-50 border border-orange-400 text-orange-900 p-6 rounded-2xl shadow-xl relative mb-8 flex items-start space-x-4">
+
+                <div class="flex-shrink-0 mt-1">
+                    <i class='bx bxs-error-alt text-4xl text-orange-600'></i>
+                </div>
+
+                <div class="flex-1">
+                    <strong class="font-extrabold block text-xl mb-2 leading-tight">
+                    </strong>
+                    <p class="block text-lg sm:inline leading-relaxed">
+                        No has establecido tus preguntas de seguridad. Esta configuración es vital para recuperar tu
+                        cuenta.
+                        <a href="{{ route('dashboard.seguridad') }}"
+                            class="font-bold underline text-orange-700 hover:text-orange-900 transition-colors ml-1">
+                            Ve a configurarlas ahora
+                        </a>.
+                    </p>
+                </div>
+
+                <span
+                    class="absolute top-3 right-3 p-1 cursor-pointer rounded-full hover:bg-orange-100 transition-colors"
+                    wire:click="$set('showSecurityNotification', false)" title="Ocultar esta notificación">
+                    <i class='bx bx-x text-2xl text-orange-500'></i>
+                </span>
+            </div>
+            @endif
+
+        </div>
+
         <!-- Quick Actions -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <button wire:click.prevent="redirectToCreateSolicitud"
-                class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-blue-500 block">
+                class="cursor-pointer bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-blue-500 block">
                 <div class="text-center">
                     <i class='bx bx-plus-circle text-4xl text-blue-600 mb-3'></i>
                     <h3 class="font-bold text-gray-900">Nueva Solicitud</h3>
@@ -62,23 +95,23 @@
                 </div>
             </a>
 
-            <button wire:click="setActiveTab('visitas')"
+            <a href="{{ route('dashboard.visitas') }}"
                 class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-blue-500">
                 <div class="text-center">
                     <i class='bx bx-calendar-check text-4xl text-blue-600 mb-3'></i>
                     <h3 class="font-bold text-gray-900">Mis Visitas</h3>
                     <p class="text-sm text-gray-600 mt-1">Programadas y realizadas</p>
                 </div>
-            </button>
+            </a>
 
-            <button wire:click="setActiveTab('perfil')"
+            <a href="{{ route('dashboard.infoGeneral') }}"
                 class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-blue-500">
                 <div class="text-center">
                     <i class='bx bx-user text-4xl text-blue-600 mb-3'></i>
                     <h3 class="font-bold text-gray-900">Mi Perfil</h3>
                     <p class="text-sm text-gray-600 mt-1">Actualizar información</p>
                 </div>
-            </button>
+            </a>
         </div>
 
         <!-- Recent Solicitudes -->
@@ -98,13 +131,16 @@
                         </div>
                         <div>
                             <h3 class="font-medium text-gray-900">{{ $solicitud->titulo }}</h3>
-                            <p class="text-sm text-gray-600">{{ $solicitud->subcategoriaRelacion->categoria ?? 'Sin Categoría'
-                                    }}, {{$solicitud->subcategoriaRelacion->subcategpria ?? 'SinSubcategoía'}}</p>
-                            <p class="text-xs text-gray-500 mt-0.5">{{ $solicitud->fecha_creacion->format('d/m/Y H:i') }}</p>
+                            <p class="text-sm text-gray-600">{{ $solicitud->subcategoriaRelacion->getCategoriaFormattedAttribute() ?? 'Sin
+                                Categoría'
+                                }}, {{$solicitud->subcategoriaRelacion->getSubcategoriaFormattedAttribute() ?? 'SinSubcategoía'}}</p>
+                            <p class="text-xs text-gray-500 mt-0.5">{{ $solicitud->fecha_creacion->format('d/m/Y H:i')
+                                }}</p>
                             <p class="text-xs text-gray-500 mt-1">Ticket: {{ $solicitud->solicitud_id }}</p>
                         </div>
                     </div>
-                    <span class="px-3 py-1 rounded-full text-xs font-medium
+                    <span
+                        class="px-3 py-1 rounded-full text-xs font-medium
                     {{$solicitud->estatus === 1 ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' : 
                     ($solicitud->estatus === 2 ? 'bg-green-100 text-green-800 hover:bg-green-200' : 
                     ($solicitud->estatus === 3 ? 'bg-red-100 text-red-800 hover:bg-red-200' : 'text-black/60 hover:bg-gray-100'))}}">

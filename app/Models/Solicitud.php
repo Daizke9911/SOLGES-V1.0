@@ -92,6 +92,11 @@ class Solicitud extends Model
         return $this->hasMany(Visita::class, 'persona_cedula', 'persona_cedula');
     }
 
+    public function visita()
+    {
+        return $this->hasOne(VisitasVisita::class, 'solicitud_id', 'solicitud_id');
+    }
+
     public function reunionRelacion(): BelongsToMany
     {
         return $this->belongsToMany(Reunion::class, (new SolicitudesReuniones())->getTable(), 'solicitud_id', 'reunion_id')

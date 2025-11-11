@@ -332,13 +332,13 @@
                                             <i class='bx bx-carets-up-down mr-2'></i>
                                         @endif
                                     </div>
-                                </th>
+                                </th>{{-- 
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div class="flex items-center justify-end">
                                         <i class='bx bx-user-plus mr-2'></i>
                                         Visita
                                     </div>
-                                </th>
+                                </th> --}}
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div class="flex justify-end items-end">
                                         <i class='bx bx-cog mr-2'></i>
@@ -378,7 +378,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $solicitudeRender->persona->nombre ?? 'N/A' }} {{ $solicitudeRender->persona->apellido ?? '' }}
-                                    </td>
+                                    </td>{{-- 
                                     <td class="flex items-center justify-end px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         @if ($solicitudeRender->asignada_visita)
                                             <div class="py-1 px-2 bg-blue-100 cursor-default rounded-full shadow-sm shadow-blue-300 transition-colors hover:bg-blue-150" title="Solicitud asignada a visitas">
@@ -389,7 +389,7 @@
                                                 <span class=" text-black/60 font-semibold">No Asignada</span>
                                             </div>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td class="px-2 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex items-center justify-end space-x-2">
                                             <button wire:click="viewSolicitud('{{ $solicitudeRender->solicitud_id }}')" 
@@ -452,20 +452,20 @@
                             @endforeach
                         </tbody>
                     </table>
-                    @if($solicitudesRender->isEmpty() && $solicitudesRender->currentPage() == 1)
-                        <div class="text-center py-8">
-                            <i class='bx bx-file text-4xl text-gray-400 mb-4'></i>
-                            <h3 class="text-lg font-medium text-gray-900 mb-2">No hay solicitudes</h3>
-                            <p class="text-gray-500">
-                                No se encontraron solicitudes en el sistema
-                            </p>
-                        </div>
-                    @else
-                        <div class="mx-5">
-                            {{ $solicitudesRender->links() }}
-                        </div>
-                    @endif
                 </div>
+                @if($solicitudesRender->isEmpty() && $solicitudesRender->currentPage() == 1)
+                    <div class="text-center py-8">
+                        <i class='bx bx-file text-4xl text-gray-400 mb-4'></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No hay solicitudes</h3>
+                        <p class="text-gray-500">
+                            No se encontraron solicitudes en el sistema
+                        </p>
+                    </div>
+                @else
+                    <div class="mx-5 mt-4">
+                        {{ $solicitudesRender->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     @endif
@@ -475,14 +475,14 @@
             
             <div class="flex items-center justify-center space-x-2 mb-8 ">
                 <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 border-2  {{ $personalData['cedula'] && $personalData['nombre_completo'] && $personalData['telefono'] && $personalData['email'] ? 'bg-blue-50 border-blue-600' : 'border-gray-300' }} rounded-full flex items-center justify-center font-bold">
+                    <div class="w-10 h-10 border-2  {{ $personalData['cedula'] && $personalData['nacionalidad'] && $personalData['nombre'] && $personalData['apellido'] && $personalData['telefono'] && $personalData['email'] ? 'bg-blue-50 border-blue-600' : 'border-gray-300' }} rounded-full flex items-center justify-center font-bold">
                         <i class='bx bx-user text-2xl 
-                        {{ $personalData['cedula'] && $personalData['nombre_completo'] && $personalData['telefono'] && $personalData['email'] ? 'text-blue-600' : 'text-gray-500' }}'></i>
+                        {{ $personalData['cedula'] && $personalData['nacionalidad'] && $personalData['nombre'] && $personalData['apellido'] && $personalData['telefono'] && $personalData['email'] ? 'text-blue-600' : 'text-gray-500' }}'></i>
                     </div>
-                    <span class="max-lg:hidden text-sm font-medium {{ $personalData['cedula'] && $personalData['nombre_completo'] && $personalData['telefono'] && $personalData['email'] ? 'text-blue-600' : 'text-gray-500' }}">
+                    <span class="max-lg:hidden text-sm font-medium {{ $personalData['cedula'] && $personalData['nacionalidad'] && $personalData['nombre'] && $personalData['apellido'] && $personalData['telefono'] && $personalData['email'] ? 'text-blue-600' : 'text-gray-500' }}">
                         Datos Personales</span>
                 </div>
-                <div class="w-3 lg:w-12 h-1 {{ $personalData['cedula'] && $personalData['nombre_completo'] && $personalData['telefono'] && $personalData['email'] ? 'bg-blue-600' : 'bg-gray-300' }} rounded">
+                <div class="w-3 lg:w-12 h-1 {{ $personalData['cedula'] && $personalData['nacionalidad'] && $personalData['nombre'] && $personalData['apellido'] && $personalData['telefono'] && $personalData['email'] ? 'bg-blue-600' : 'bg-gray-300' }} rounded">
                 </div>
                 <div class="flex flex-col items-center">
                     <div class="w-10 h-10 border-2 {{ $solicitud['solicitudCategoria']['categoria'] && $solicitud['solicitudCategoria']['subcategoria'] ? 'bg-blue-50 border-blue-600' : 'border-gray-300'  }} rounded-full flex items-center justify-center font-bold">
@@ -537,7 +537,7 @@
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-900">Datos Personales</h3>
-                                    @if($personalData['cedula'] && $personalData['nombre_completo'] && $personalData['telefono'] && $personalData['email'])
+                                    @if($personalData['cedula'] && $personalData['nacionalidad'] && $personalData['nombre'] && $personalData['apellido'] && $personalData['telefono'] && $personalData['email'] && $editingSolicitud)
                                         <p class="text-sm text-gray-600">Información registrada en el sistema</p>
                                     @else
                                         <p class="text-sm text-gray-600">Ingresar información personal</p>
@@ -553,7 +553,7 @@
                                             @if ($mensajeSolcitante === 1)
                                                 <button wire:click="rellenarDatosSolicitante()" class="border-1 border-green-500 transition-colors bg-green-100 text-green-800 hover:bg-green-200 px-2 rounded-xl text-xs lg:text-sm cursor-pointer">Rellenar Datos</button>
                                             @elseif($mensajeSolcitante === 2)
-                                                <p class="text-xs lg:text-sm text-red-600">no regisrado</p>
+                                                <p class="text-xs lg:text-sm text-red-600">no registrado</p>
                                             @endif
                                         @endif
                                     </div>
@@ -564,6 +564,7 @@
                                         @else
                                             <div class="flex items-center">
                                                 <select wire:model.live="personalData.nacionalidad" class="w-15 mr-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                                                    <option value="" disabled selected>...</option>
                                                     @foreach ($nacionalidad as $nacionalidadd)
                                                         <option value="{{$nacionalidadd->id}}">{{$nacionalidadd->id === 1 ? 'V' : 'E'}}</option>
                                                     @endforeach
@@ -571,10 +572,15 @@
                                                 <input type="text" maxlength="15" wire:model.live.debounce.500ms="personalData.cedula"
                                                  class="w-full font-medium text-gray-900 focus:outline-none" placeholder="Escribir Cédula..."
                                                  oninput="this.value = this.value.replace(/\D/g, '')">
-
                                             </div>
                                         @endif
                                     </div>
+                                    @error('personalData.nacionalidad') 
+                                        <div class="flex items-center text-red-600 text-sm mt-1">
+                                            <i class='bx bx-error-circle mr-1'></i>
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                     @error('personalData.cedula') 
                                         <div class="flex items-center text-red-600 text-sm mt-1">
                                             <i class='bx bx-error-circle mr-1'></i>
@@ -582,22 +588,43 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="bg-white p-4 rounded-lg border border-gray-200 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition duration-150 ease-in-out">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre Completo</label>
-                                    <div class="flex items-center">
-                                        <i class='bx bx-user text-blue-600 mr-2'></i>
-                                        @if($personalData['nombre_completo'] && $editingSolicitud)
-                                            <span class="font-medium text-gray-900">{{ $personalData['nombre_completo'] ?? 'No registrado' }}</span>
-                                        @else
-                                            <input type="text" wire:model.live="personalData.nombre_completo" maxlength="50" class="w-full font-medium text-gray-900 focus:outline-none" placeholder="Escribir Nombre Completo...">
-                                        @endif
-                                    </div>
-                                    @error('personalData.nombre_completo') 
-                                        <div class="flex items-center text-red-600 text-sm mt-1">
-                                            <i class='bx bx-error-circle mr-1'></i>
-                                            {{ $message }}
+                                <div class="bg-white flex gap-x-2 p-4 rounded-lg border border-gray-200 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition duration-150 ease-in-out">
+                                    
+                                    <div class="w-full px-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                                        <div class="flex items-center">
+                                            <i class='bx bx-user text-blue-600 mr-2'></i>
+                                            @if($personalData['nombre'] && $editingSolicitud)
+                                                <span class="w-full font-medium text-gray-900">{{ $personalData['nombre'] ?? 'No registrado' }}</span>
+                                            @else
+                                                <input type="text" wire:model.live="personalData.nombre" maxlength="25" class="w-full font-medium text-gray-900 focus:outline-none" placeholder="Escribir Nombre...">
+                                            @endif
                                         </div>
-                                    @enderror
+                                        @error('personalData.nombre') 
+                                            <div class="flex items-center text-red-600 text-sm mt-1">
+                                                <i class='bx bx-error-circle mr-1'></i>
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="w-full px-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
+                                        <div class="flex items-center">
+                                            <i class='bx bx-user text-blue-600 mr-2'></i>
+                                            @if($personalData['apellido'] && $editingSolicitud)
+                                                <span class="w-full font-medium text-gray-900">{{ $personalData['apellido'] ?? 'No registrado' }}</span>
+                                            @else
+                                                <input type="text" wire:model.live="personalData.apellido" maxlength="25" class="w-full font-medium text-gray-900 focus:outline-none" placeholder="Escribir Apellido...">
+                                            @endif
+                                        </div>
+                                        @error('personalData.apellido') 
+                                            <div class="flex items-center text-red-600 text-sm mt-1">
+                                                <i class='bx bx-error-circle mr-1'></i>
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="bg-white p-4 rounded-lg border border-gray-200 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition duration-150 ease-in-out">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
@@ -625,7 +652,7 @@
                                         @else
                                             <div class="flex items-center">
                                                 <select wire:model.live="personalData.prefijo" class="z-50 w-20 mr-2 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                                                    <option value="" disabled selected>XXXX</option>
+                                                    <option value="" disabled selected>----</option>
                                                     <option value="0412">0412</option>
                                                     <option value="0422">0422</option>
                                                     <option value="0414">0414</option>
@@ -636,7 +663,7 @@
                                                 <input type="text" id="telefono_solicitud" wire:model.live="personalData.telefono" class="w-full font-medium text-gray-900 focus:outline-none"
                                                     pattern="\d{3}-\d{4}"
                                                     oninput="this.value = this.value.replace(/\D/g, '').replace(/(\d{3})(\d{4})/, '$1-$2')"
-                                                    placeholder="XXX-XXXX" maxlength="8">
+                                                    placeholder="000-0000" maxlength="8">
                                             </div>
                                         @endif
                                     </div>
@@ -651,7 +678,7 @@
                         </div>
 
                         <!-- PASO 2: CATEGORIAS -->
-                        @if ((($personalData['cedula'] && $personalData['nombre_completo'] && $personalData['telefono'] && $personalData['email']) && !$editingSolicitud) || $editingSolicitud)
+                        @if ((($personalData['cedula'] && $personalData['nacionalidad'] && $personalData['nombre'] && $personalData['apellido'] && $personalData['telefono'] && $personalData['email']) && !$editingSolicitud) || $editingSolicitud)
                             <div class="space-y-6">
                                 <div class="flex items-center mb-4">
                                     <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
@@ -1209,7 +1236,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div>{{-- 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 mt-4">
                     <div class="p-6 space-y-6">
                         <div class="flex justify-between items-start">
@@ -1239,7 +1266,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         @endif
     </div>

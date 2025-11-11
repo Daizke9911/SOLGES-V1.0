@@ -5,6 +5,7 @@ use App\Livewire\Auth\LoginForm;
 use App\Livewire\Auth\RegisterForm;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Dashboard\UsuarioDashboard;
+use App\Livewire\Dashboard\Visitas;
 use App\Livewire\Dashboard\AdministradorDashboard;
 use App\Livewire\Dashboard\AdministradorSolicitudes;
 use App\Livewire\Dashboard\AdministradoUsuarios;
@@ -28,6 +29,10 @@ use App\Livewire\Dashboard\Trabajadores\Index;
 Route::get('/', function () {
     return redirect(route('login'));
 });
+
+Route::get('/CMBEY', function () {
+    return view('home'); 
+});;
 
 Route::get('/login', LoginForm::class)->name('login')->middleware('guest');
 
@@ -71,6 +76,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/seguridad', SuperAdminSeguridad::class)
         ->name('dashboard.seguridad')
         ->middleware('role:3,2,1');
+
+        
+        Route::get('/dashboard/visitas', Visitas::class)
+            ->name('dashboard.visitas')
+            ->middleware('role:2,3');
     
             //usuario routes
 
@@ -96,6 +106,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/administrador/solicitudes', AdministradorSolicitudes::class)
             ->name('dashboard.admin.solicitudes')
             ->middleware('role:2');
+
 
         //superdmin routes
         Route::get('/dashboard/reuniones', [ReunionController::class, 'index'])

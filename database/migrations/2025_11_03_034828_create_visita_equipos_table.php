@@ -12,16 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('visita_equipos', function (Blueprint $table) {
-            $table->id('visita_id');
-            $table->unsignedBigInteger('cedula');
-            $table->string('cargo');
-
-            $table->foreign('cedula')->references('cedula')->on('personas')->onUpdate('cascade')->onDelete('cascade');/* 
-            $table->foreign('cargo')->references('cargo')->on('personas_cargo_visitas')->onUpdate('cascade')->onDelete('cascade'); */
-
-            $table->softDeletes();
-            $table->timestamps();
-        });
+    
+            $table->id(); 
+    $table->string('solicitud_id'); 
+    $table->unsignedBigInteger('cedula');
+    $table->foreign('solicitud_id')
+          ->references('solicitud_id')
+          ->on('visitas_visitas') 
+          ->onUpdate('cascade')
+          ->onDelete('cascade');
+    $table->foreign('cedula')
+          ->references('cedula')
+          ->on('personas')
+          ->onUpdate('cascade')
+          ->onDelete('cascade');
+    $table->unique(['solicitud_id', 'cedula']); 
+    $table->softDeletes();
+    $table->timestamps();
+});
     }
 
     /**

@@ -9,7 +9,7 @@
         <!-- Notification Bell Icon -->
         <button @click="$wire.toggleDropdown()" 
                 type="button"
-                class="relative p-2 text-white hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors focus:outline-none">
+                class="relative p-2 text-white hover:bg-opacity-10 rounded-lg transition-colors focus:outline-none">
             <i class='bx bx-bell text-2xl'></i>
             
             <!-- Badge for unread count - Se actualiza reactivamente -->
@@ -31,7 +31,7 @@
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 transform scale-100"
              x-transition:leave-end="opacity-0 transform scale-95"
-             class="absolute right-0 mt-2 w-80 md:w-96 bg-white rounded-lg shadow-xl z-50 max-h-96 overflow-hidden border border-gray-200">
+             class="absolute -right-9 lg:right-0 mt-2 w-80 md:w-96 bg-white rounded-lg shadow-xl z-50 max-h-96 overflow-hidden border border-gray-200">
             
             <!-- Header -->
             <div class="px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white flex items-center justify-between">
@@ -46,7 +46,7 @@
             </div>
 
             <!-- Notifications List -->
-            <div class="overflow-y-auto max-h-80">
+            <div class="overflow-y-auto max-h-80 ">
                 @if(count($notifications) > 0)
                     @foreach($notifications as $notification)
                         <div class="px-4 py-3 border-b border-gray-200 hover:bg-gray-50 transition-colors">

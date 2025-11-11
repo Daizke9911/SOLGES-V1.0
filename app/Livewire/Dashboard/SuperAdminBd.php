@@ -7,6 +7,8 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class SuperAdminBd extends Component
 {
@@ -15,166 +17,64 @@ class SuperAdminBd extends Component
     public $importFile;
     public $message = '';
     public $messageType = '';
+    
+    public $importType = null;
 
     protected $listeners = ['resetMessages'];
     
-    private $dumpPath = 'C:\\xampp\\mysql\\bin\\mysqldump.exe';
-    private $mysqlPath = 'C:\\xampp\\mysql\\bin\\mysql.exe';
+    private $dumpPath = '/opt/lampp/bin/mysqldump';
+    private $mysqlPath = '/opt/lampp/bin/mysql';
 
-    /**
-     * Exporta la base de datos completa a un archivo .sql.
-     */
-    public function exportSql()
+    public function cancelarImportacion()
+    {
+        $this->importFile = null; 
+        $this->importType = null;
+    }
+
+    public function exportSql($format = 'sql')
     {
         $this->resetMessages();
-        
+
         try {
-            // ** VERIFICACIÓN CRÍTICA DE RUTA **
-            if (!file_exists($this->dumpPath)) {
-                 // Esta excepción mostrará la ruta exacta que no se encontró en el mensaje de error.
-                 throw new \Exception('Ruta de mysqldump.exe no válida. Archivo no encontrado en: ' . $this->dumpPath);
+            if ($format === 'sql') {
+                return $this->executeSqlExport();
+            } elseif ($format === 'json') {
+                return $this->executeJsonExport();
             }
-            
-            $timestamp = now()->format('Y-m-d_His');
-            $dbName = "proyecto";
-            $dbUser = "root";
-            $dbPassword = env('DB_PASSWORD');
-            $dbHost = env('DB_HOST', '127.0.0.1'); 
-            $dbPort = env('DB_PORT', '3306');
-
-            if (empty($dbName)) {
-                 throw new \Exception('El nombre de la base de datos (DB_DATABASE) no puede estar vacío en el archivo .env.');
-            }
-
-            // Crear directorio si no existe
-            $backupDir = storage_path('app/backups');
-            if (!file_exists($backupDir)) {
-                mkdir($backupDir, 0755, true);
-            }
-            
-            $filename = "backup_{$dbName}_{$timestamp}.sql";
-            $filepath = "{$backupDir}/{$filename}";
-
-            // Argumentos de conexión
-            $args = [
-                '--host=' . escapeshellarg($dbHost),
-                '--port=' . escapeshellarg($dbPort),
-                '--user=' . escapeshellarg($dbUser),
-            ];
-            
-            // SOLO añadir la contraseña si no está vacía o nula (común para 'root' en XAMPP).
-            if (!empty($dbPassword)) {
-                $args[] = '--password=' . escapeshellarg($dbPassword);
-            }
-            
-            // Comando COMPLETO: usa redirección de salida (>)
-            $command = sprintf(
-                '%s %s %s > %s',
-                escapeshellarg($this->dumpPath), 
-                implode(' ', $args), 
-                escapeshellarg($dbName),
-                escapeshellarg($filepath)
-            );
-
-            $process = Process::fromShellCommandline($command);
-            $process->setTimeout(300); // 5 minutos de timeout
-            $process->run();
-            
-            if (!$process->isSuccessful()) {
-                $errorOutput = $process->getErrorOutput();
-                // Limpiar el archivo incompleto si existe
-                if (file_exists($filepath)) { @unlink($filepath); }
-                
-                // Sanitizar la contraseña para evitar que se muestre en el mensaje de error
-                $sanitizedCommand = preg_replace('/--password=\S*/', '--password=*', $command);
-                
-                throw new \Exception("Fallo en mysqldump. Error: " . $errorOutput . " Comando: " . $sanitizedCommand); 
-            }
-
-            $this->dispatch('show-toast', [
-                'message' => 'Exportación de la base de datos en SQL completada.' ,
-                'type' => 'success'
-            ]);
-
-            return response()->download($filepath)->deleteFileAfterSend(true);
-
         } catch (\Exception $e) {
             $this->message = 'Error al exportar: ' . $e->getMessage();
             $this->messageType = 'error';
-            Log::error('SQL Export Error: ' . $e->getMessage());
+            Log::error('SQL/JSON Export Error: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Importa la base de datos desde un archivo SQL subido.
-     */
-    public function importDatabase()
-    {
-        $this->resetMessages();
-        // Nota: Solo permitimos .sql por ahora, se ignoró el botón de JSON
-        $this->validate([
-            'importFile' => 'required|file|mimes:sql|max:102400',
-        ], [
-            'importFile.mimes' => 'Solo se permiten archivos con extensión .sql.',
-        ]);
         
-        $path = null;
-        $userId = auth()->id();
-
-        try {
-            $path = $this->importFile->store('temp-imports');
-            $fullPath = storage_path("app/{$path}");
-
-            $this->executeSqlImport($fullPath);
-
-            if ($userId) {
-                auth()->loginUsingId($userId);
-            }
-
-            Storage::delete($path);
-            
-            $this->dispatch('show-toast', [
-                'message' => 'Importación de la base de datos SQL completada.' ,
-                'type' => 'success'
-            ]);
-
-            $this->message = 'Importación completada exitosamente';
-            $this->messageType = 'success';
-            $this->reset(['importFile']); 
-
-        } catch (\Exception $e) {
-            if (isset($path)) {
-                Storage::delete($path);
-            }
-            
-            $this->message = 'Error al importar: ' . $e->getMessage();
-            $this->messageType = 'error';
-            Log::error('SQL Import Error: ' . $e->getMessage());
-        }
+        return null;
     }
 
-    /**
-     * Lógica de bajo nivel para ejecutar el comando de importación SQL.
-     */
-    private function executeSqlImport($filepath)
+    private function executeSqlExport()
     {
-        $dbName = env('DB_DATABASE', 'proyecto');
+        if (!file_exists($this->dumpPath)) {
+             throw new \Exception('Ruta de mysqldump no válida. Archivo no encontrado en: ' . $this->dumpPath);
+        }
+        
+        $timestamp = now()->format('Y-m-d_His');
+        $dbName = env('DB_DATABASE' , 'proyecto');
         $dbUser = env('DB_USERNAME', 'root');
         $dbPassword = env('DB_PASSWORD');
-        $dbHost = env('DB_HOST', '127.0.0.1');
+        $dbHost = env('DB_HOST', '127.0.0.1'); 
         $dbPort = env('DB_PORT', '3306');
 
-        // ** VERIFICACIÓN CRÍTICA DE RUTA **
-        if (!file_exists($this->mysqlPath)) {
-             // Esta excepción mostrará la ruta exacta que no se encontró en el mensaje de error.
-             throw new \Exception('Ruta de mysql.exe no válida. Archivo no encontrado en: ' . $this->mysqlPath);
-        }
-        
         if (empty($dbName)) {
-             throw new \Exception('El nombre de la base de datos (DB_DATABASE) no puede estar vacío en el archivo .env.');
+             throw new \Exception('El nombre de la base de datos (DB_DATABASE) no puede estar vacío.');
         }
 
-        // Argumentos de conexión
+        $backupDir = storage_path('app/backups');
+        if (!file_exists($backupDir)) {
+            mkdir($backupDir, 0755, true); 
+        }
+        
+        $filename = "backup_{$dbName}_{$timestamp}.sql";
+        $filepath = "{$backupDir}/{$filename}";
+
         $args = [
             '--host=' . escapeshellarg($dbHost),
             '--port=' . escapeshellarg($dbPort),
@@ -185,28 +85,180 @@ class SuperAdminBd extends Component
             $args[] = '--password=' . escapeshellarg($dbPassword);
         }
         
-        // Comando COMPLETO: usa redirección de entrada (<)
         $command = sprintf(
-            '%s %s %s < %s',
-            escapeshellarg($this->mysqlPath), 
+            '%s %s %s > %s',
+            escapeshellarg($this->dumpPath), 
             implode(' ', $args), 
             escapeshellarg($dbName),
             escapeshellarg($filepath)
         );
 
         $process = Process::fromShellCommandline($command);
-        $process->setTimeout(600);
+        $process->setTimeout(300);
         $process->run();
-
+        
         if (!$process->isSuccessful()) {
-            $errorOutput = $process->getErrorOutput() . $process->getOutput();
-            // Sanitizar la contraseña para evitar que se muestre en el mensaje de error
-            $sanitizedError = preg_replace('/--password=\S*/', '--password=*', $errorOutput);
+            $errorOutput = $process->getErrorOutput();
+            if (file_exists($filepath)) { @unlink($filepath); }
             $sanitizedCommand = preg_replace('/--password=\S*/', '--password=*', $command);
             
-            throw new \Exception("Fallo en mysql import. Error: " . $sanitizedError . " Comando: " . $sanitizedCommand);
+            throw new \Exception("Fallo en mysqldump. Error: " . $errorOutput . " Comando: " . $sanitizedCommand); 
+        }
+
+        $this->dispatch('show-toast', [
+            'message' => 'Exportación de la base de datos en SQL completada.' ,
+            'type' => 'success'
+        ]);
+
+        return response()->download($filepath)->deleteFileAfterSend(true);
+    }
+
+    private function executeJsonExport()
+    {
+        $dbName = env('DB_DATABASE', 'proyecto');
+        $timestamp = now()->format('Y-m-d_His');
+        
+        $backupDir = storage_path('app/backups');
+        if (!file_exists($backupDir)) {
+            mkdir($backupDir, 0755, true);
+        }
+
+        $filename = "backup_{$dbName}_{$timestamp}.json";
+        $filepath = "{$backupDir}/{$filename}";
+
+        $tables = DB::select('SHOW TABLES');
+        $tables = array_map('current', $tables);
+        $data = [];
+
+        foreach ($tables as $table) {
+            if (in_array($table, ['migrations', 'failed_jobs', 'password_reset_tokens', 'personal_access_tokens', 'jobs', 'sessions'])) {
+                continue;
+            }
+            $data[$table] = DB::table($table)->get()->toArray();
+        }
+
+        file_put_contents($filepath, json_encode($data, JSON_PRETTY_PRINT));
+
+        $this->dispatch('show-toast', [
+            'message' => 'Exportación de la base de datos en JSON completada.' ,
+            'type' => 'success'
+        ]);
+
+        return response()->download($filepath)->deleteFileAfterSend(true);
+    }
+
+    public function importDatabase()
+    {
+        $this->resetMessages();
+        
+        $this->validate([
+            'importFile' => 'required|file|mimes:sql,json|max:102400',
+            'importType' => 'required|in:sql,json',
+        ], [
+            'importFile.mimes' => 'Solo se permiten archivos con extensión .sql o .json.',
+            'importType.required' => 'Debes seleccionar el formato del archivo (SQL o JSON).',
+        ]);
+        
+        $path = null;
+        $fullPath = null;
+        $userId = auth()->id();
+
+        try {
+            $path = $this->importFile->store('temp-imports');
+            $fullPath = Storage::disk('local')->path($path);
+
+            chmod($fullPath, 0777);
+
+            if ($this->importType === 'sql') {
+                $this->executeSqlImport($fullPath);
+            } else {
+                $this->executeJsonImport($fullPath);
+            }
+
+            if ($userId) {
+                auth()->loginUsingId($userId);
+            }
+
+            Storage::delete($path);
+            
+            $this->dispatch('show-toast', [
+                'message' => 'Importación de la base de datos completada.' ,
+                'type' => 'success'
+            ]);
+
+            $this->message = 'Importación completada exitosamente';
+            $this->messageType = 'success';
+            $this->reset(['importFile', 'importType']);
+
+        } catch (\Exception $e) {
+            if (isset($path)) {
+                Storage::delete($path);
+            }
+            
+            $this->message = 'Error al importar: ' . $e->getMessage();
+            $this->messageType = 'error';
+            Log::error('SQL/JSON Import Error: ' . $e->getMessage());
         }
     }
+
+   private function executeJsonImport($filepath)
+    {
+        try {
+
+            @ini_set('max_execution_time', 600);
+            @ini_set('memory_limit', '1024M');
+
+            Log::info('Iniciando importación JSON desde: ' . $filepath);
+            
+            $json = file_get_contents($filepath);
+            if ($json === false) {
+                throw new \Exception('No se pudo leer el archivo JSON desde el disco.');
+            }
+            
+            $data = json_decode($json, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Error al decodificar el archivo JSON. Error: ' . json_last_error_msg());
+            }
+
+            Log::info('JSON decodificado. Deshabilitando llaves foráneas y truncando tablas.');
+
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+            foreach ($data as $table => $rows) {
+                Log::info("Truncando tabla: $table");
+                DB::table($table)->truncate();
+            }
+
+            Log::info('Tablas truncadas. Iniciando transacción de inserción.');
+
+            DB::transaction(function () use ($data) {
+                foreach ($data as $table => $rows) {
+                    
+                    if (empty($rows)) { // Omitir si no hay filas
+                        Log::info("Omitiendo inserción en tabla vacía: $table");
+                        continue;
+                    }
+
+                    Log::info("Insertando datos en: $table");
+                    
+                    foreach (array_chunk($rows, 200) as $chunk) {
+                        $insertData = json_decode(json_encode($chunk), true);
+                        DB::table($table)->insert($insertData);
+                    }
+                }
+            });
+
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+            Log::info('Importación JSON completada.');
+
+        } catch (Throwable $e) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+            Log::error('Fallo en executeJsonImport: ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine());
+            throw new \Exception('Error durante la importación JSON: ' . $e->getMessage());
+        }
+    }
+
 
     public function resetMessages()
     {

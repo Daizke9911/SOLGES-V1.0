@@ -187,13 +187,13 @@
                                             <i class='bx bx-carets-up-down mr-2'></i>
                                         @endif
                                     </div>
-                                </th>
+                                </th>{{-- 
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div class="flex items-center justify-end">
                                         <i class='bx bx-user-plus mr-2'></i>
                                         Visita
                                     </div>
-                                </th>
+                                </th> --}}
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <div class="flex items-center justify-end">
                                         Estatus
@@ -232,7 +232,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $solicitudeRender->persona->nombre ?? 'N/A' }} {{ $solicitudeRender->persona->apellido ?? '' }}
-                                    </td>
+                                    </td>{{-- 
                                     <td class="flex items-center justify-end px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         @if ($solicitudeRender->asignada_visita)
                                             <div class="py-1 px-2 bg-blue-100 cursor-default rounded-full shadow-sm shadow-blue-300 transition-colors hover:bg-blue-150" title="Solicitud asignada a visitas">
@@ -243,7 +243,7 @@
                                                 <span class=" text-black/60 font-semibold">No Asignada</span>
                                             </div>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         <div class="flex items-center justify-end">
                                             {{ $solicitudeRender->getEstatusFormattedAttribute()}}
@@ -470,7 +470,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div>{{-- 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 mt-4">
                     <div class="p-6 space-y-6">
                         <div class="flex justify-between items-start">
@@ -500,7 +500,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         @endif
     </div>
