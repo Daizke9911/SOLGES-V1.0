@@ -47,6 +47,10 @@ class SubCategoriasSeeder extends Seeder
                 'descripcion' => 'Relaciodado a casos de maltrato animal',
                 'categoria' => 'social'
             ],[
+                'subcategoria' => 'deporte y recreación',
+                'descripcion' => 'Relaciodado a casos deportivos y recreativos',
+                'categoria' => 'social'
+            ],[
                 'subcategoria' => 'aguas blancas',
                 'descripcion' => 'Relaciodado a botes, fugas o problemas de aguas limpias o potable',
                 'categoria' => 'servicio publico'
