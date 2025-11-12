@@ -142,38 +142,39 @@
                         </div>
                     </template>
 
-                    <template x-if="userRole <= 3">
-                        <div>
-                            <button @click="profileOptions = !profileOptions"
-                                class="sidebar-item w-full flex items-center justify-between p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
-                                <div class="flex items-center">
-                                    <i class='bx bx-wrench text-xl mr-3'></i>
-                                    <span>Perfil</span>
-                                </div>
-                                <i class='bx bx-chevron-down transition-transform'
-                                    :class="{'rotate-180': profileOptions}"></i>
-                            </button>
-                            <ul class="sidebar-submenu ml-6 mt-2 space-y-1" :class="{'open': profileOptions}">
-                                <li>
-                                    <a href="{{route('dashboard.infoGeneral')}}" @click="sidebarOpen = false"
-                                        class="sidebar-item flex items-center p-2 text-blue-100 rounded hover:bg-white hover:bg-opacity-10">
-                                        <i class='bx bx-male text-xl mr-2 '></i>
-                                        <span class="text-sm">Informacion general</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('dashboard.seguridad') }}" @click="sidebarOpen = false"
-                                        class="sidebar-item flex items-center p-2 text-blue-100 rounded hover:bg-white hover:bg-opacity-10">
-                                        <i class='bx bx-lock-open text-lg mr-2'></i>
-                                        <span class="text-sm">Seguridad</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </template>
-
 
                     <!-- Parameters (Only For SuperAdmins) -->
+
+                    <!-- Gestión usuarios (Only For SuperAdmins) -->
+                    <template x-if="userRole === 1">
+                        <li>
+                            <a href="{{route('dashboard.superadmin.usuarios')}}" @click="sidebarOpen = false"
+                                class="sidebar-item flex items-center p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
+                                <i class='bx bx-user text-xl mr-4'></i>
+                                <span>Gestión Usuarios</span>
+                            </a>
+                        </li>
+                    </template>
+
+                    <template x-if="userRole === 1">
+                        <li>
+                            <a href="{{route('dashboard.superadmin.trabajadores')}}" @click="sidebarOpen = false"
+                                class="sidebar-item flex items-center p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
+                                <i class="bx bx-book-content text-xl mr-3"></i>
+                                <span>Gestión Trabajadores</span>
+                            </a>
+                        </li>
+                    </template>
+
+                    <template x-if="userRole === 1">
+                        <li>
+                            <a href="{{route('dashboard.superadmin.reportes')}}" @click="sidebarOpen = false"
+                                class="sidebar-item flex items-center p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
+                                <i class='bx bx-bar-chart-alt-2 text-xl mr-3'></i>
+                                <span>Reportes</span>
+                            </a>
+                        </li>
+                    </template>
 
                     <template x-if="userRole === 1">
                         <div>
@@ -205,35 +206,34 @@
                         </div>
                     </template>
 
-                    <!-- Gestión usuarios (Only For SuperAdmins) -->
-                    <template x-if="userRole === 1">
-                        <li>
-                            <a href="{{route('dashboard.superadmin.usuarios')}}" @click="sidebarOpen = false"
-                                class="sidebar-item flex items-center p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
-                                <i class='bx bx-user text-xl mr-4'></i>
-                                <span>Gestión Usuarios</span>
-                            </a>
-                        </li>
-                    </template>
-
-                    <template x-if="userRole === 1">
-                        <li>
-                            <a href="{{route('dashboard.superadmin.trabajadores')}}" @click="sidebarOpen = false"
-                                class="sidebar-item flex items-center p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
-                                <i class="bx bx-book-content text-xl mr-3"></i>
-                                <span>Gestión Trabajadores</span>
-                            </a>
-                        </li>
-                    </template>
-
-                    <template x-if="userRole === 1">
-                        <li>
-                            <a href="{{route('dashboard.superadmin.reportes')}}" @click="sidebarOpen = false"
-                                class="sidebar-item flex items-center p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
-                                <i class='bx bx-bar-chart-alt-2 text-xl mr-3'></i>
-                                <span>Reportes</span>
-                            </a>
-                        </li>
+                    <template x-if="userRole <= 3">
+                        <div>
+                            <button @click="profileOptions = !profileOptions"
+                                class="sidebar-item w-full flex items-center justify-between p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
+                                <div class="flex items-center">
+                                    <i class='bx bx-wrench text-xl mr-3'></i>
+                                    <span>Perfil</span>
+                                </div>
+                                <i class='bx bx-chevron-down transition-transform'
+                                    :class="{'rotate-180': profileOptions}"></i>
+                            </button>
+                            <ul class="sidebar-submenu ml-6 mt-2 space-y-1" :class="{'open': profileOptions}">
+                                <li>
+                                    <a href="{{route('dashboard.infoGeneral')}}" @click="sidebarOpen = false"
+                                        class="sidebar-item flex items-center p-2 text-blue-100 rounded hover:bg-white hover:bg-opacity-10">
+                                        <i class='bx bx-male text-xl mr-2 '></i>
+                                        <span class="text-sm">Informacion general</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('dashboard.seguridad') }}" @click="sidebarOpen = false"
+                                        class="sidebar-item flex items-center p-2 text-blue-100 rounded hover:bg-white hover:bg-opacity-10">
+                                        <i class='bx bx-lock-open text-lg mr-2'></i>
+                                        <span class="text-sm">Seguridad</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </template>
 
                     <template x-if="userRole === 1">

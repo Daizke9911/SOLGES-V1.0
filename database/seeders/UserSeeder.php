@@ -19,8 +19,8 @@ class UserSeeder extends Seeder
         Personas::updateOrCreate(
             ['cedula' => 1234567],
             [
-                'nombre' => 'Super',
-                'apellido' => 'Admin',
+                'nombre' => 'Jesus',
+                'apellido' => 'Chaviel',
                 'segundo_nombre' => 'Usuario',
                 'segundo_apellido' => 'Sistema',
                 'nacionalidad' => 1,
@@ -44,8 +44,8 @@ class UserSeeder extends Seeder
         Personas::updateOrCreate(
             ['cedula' => 29970399],
             [
-                'nombre' => 'Admin',
-                'apellido' => 'Municipal',
+                'nombre' => 'Gabriel',
+                'apellido' => 'Vargas',
                 'segundo_nombre' => 'del',
                 'segundo_apellido' => 'Consejo',
                 'nacionalidad' => 1,
