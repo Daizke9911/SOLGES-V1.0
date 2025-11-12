@@ -1059,7 +1059,7 @@
                             <button type="button" wire:click="setActiveTab('list')"
                                     class="w-full text-center justify-center items-center bg-white sm:w-auto px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
                                 <i class='bx bx-arrow-back lg:mr-2'></i>
-                                <span class="max-lg:hidden">Regresar Atras</span>
+                                <span class="max-lg:hidden">Regresar Atrás</span>
                             </button>
                             <button wire:click="donwloadPDFSolicitud('{{$showSolicitud->solicitud_id}}')" 
                                     class="flex text-center justify-center items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors shadow-sm"
