@@ -188,7 +188,7 @@
                                     <a href="{{route('dashboard.superadmin.categorias')}}" @click="sidebarOpen = false"
                                         class="sidebar-item flex items-center p-2 text-blue-100 rounded hover:bg-white hover:bg-opacity-10">
                                         <i class='bx bx-file text-xl mr-2 '></i>
-                                        <span class="text-sm">Categorias</span>
+                                        <span class="text-sm">Categorías</span>
                                     </a>
                                 </li>
                                 <li>
