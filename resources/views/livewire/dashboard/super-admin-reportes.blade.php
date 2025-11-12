@@ -34,7 +34,7 @@
           <div class="flex flex-col">
             <div class="flex justify-between items-center max-lg:flex-col">
               <h2 class="text-lg lg:text-xl lg:ml-10 my-auto font-bold text-gray-900 max-lg:ml-0 max-lg:text-center">
-                Reporte de Solicitudes</h2>
+                Reporte General de las Solicitudes</h2>
               <div class="flex justify-center items-center gap-4">
                 <button type="button" onclick="generarPDF('chart1')"
                     class="w-12 h-12 border border-gray-300 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
@@ -232,7 +232,7 @@
           {{-- CHART2 --}}
           <div class="flex items-center justify-center lg:justify-between max-lg:flex-col">
             <h2 class="text-lg lg:text-xl lg:ml-10 my-5 font-bold text-gray-900 max-lg:mx-auto max-lg:text-center">
-              Historial de Solicitudes</h2>
+              Historial de las Solicitudes</h2>
             <div class="flex justify-end mt-3 gap-4">
               <button type="button" onclick="generarPDF('chart2')"
                   class="w-12 h-12 border border-gray-300 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
