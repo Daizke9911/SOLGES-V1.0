@@ -247,7 +247,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-4 py-12 text-center text-gray-500 bg-gray-50">
+                                    <td colspan="7" class="px-4 py-12 text-center text-gray-500 bg-gray-50">
                                         <div class="flex flex-col items-center justify-center">
                                             <i class='bx bx-user-x text-6xl mb-3'></i>
                                             <p class="text-lg font-medium">No se encontraron trabajadores</p>
