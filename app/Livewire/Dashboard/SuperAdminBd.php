@@ -57,7 +57,7 @@ class SuperAdminBd extends Component
         }
         
         $timestamp = now()->format('Y-m-d_His');
-        $dbName = env('DB_DATABASE' , 'proyecto');
+        $dbName = env('DB_DATABASE' , 'sistema_solges_2025');
         $dbUser = env('DB_USERNAME', 'root');
         $dbPassword = env('DB_PASSWORD');
         $dbHost = env('DB_HOST', '127.0.0.1'); 
@@ -115,7 +115,7 @@ class SuperAdminBd extends Component
 
     private function executeJsonExport()
     {
-        $dbName = env('DB_DATABASE', 'proyecto');
+        $dbName = env('DB_DATABASE', 'sistema_solges_2025');
         $timestamp = now()->format('Y-m-d_His');
         
         $backupDir = storage_path('app/backups');
