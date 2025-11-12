@@ -204,19 +204,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="bg-blue-50/50 rounded-xl p-6 border border-white hover:shadow-sm hover:border-blue-100">
-              <h3 class="text-md font-bold flex items-center justify-center">Solicitudes Asignadas a Visitas</h3>
-              <div class="flex items-center justify-between">
-                <div class="flex flex-col pt-1">
-                  <span class="text-gray-800 pt-1">Total de Solicitudes: </span>
-                </div>
-
-                <div class="flex flex-col items-center justify-center pt-1">
-                  <p class="pt-1"><strong>{{$solicitudes->where('asignada_visita', true)->count()}}</strong></p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
