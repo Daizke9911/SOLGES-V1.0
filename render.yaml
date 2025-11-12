@@ -1,0 +1,65 @@
+services:
+  - type: mysql
+    name: Sistema_SOLGES_2025 # Puedes cambiarle el nombre
+    region: oregon # Elige la región más cercana
+
+  # Caché con Redis (Recomendado para Livewire)
+  - type: redis
+    name: Sistema_SOLGES_2025_cache # Puedes cambiarle el nombre
+    region: oregon
+
+  # Aplicación Web (Laravel)
+  - type: web
+    name: Sistema_SOLGES_2025 # Puedes cambiarle el nombre
+    region: oregon
+    runtime: php # Indica que es un entorno PHP
+    plan: free # Puedes cambiarlo a "standard" si necesitas más potencia
+    
+    # Comandos para construir el proyecto
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      npm install
+      npm run build # ¡Esencial para Livewire/Vite/Mix!
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php artisan migrate --force # Ejecuta migraciones automáticamente
+      
+    # Comando para iniciar el servidor
+    startCommand: php artisan serve --host 0.0.0.0 --port ${PORT}
+    
+    # Variables de Entorno
+    envVars:
+      - key: APP_URL
+        value: ${RENDER_EXTERNAL_URL} # URL pública de Render
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      # --- ¡AQUÍ VA TU APP_KEY! ---
+      # Debes añadir tu APP_KEY manualmente en el dashboard de Render.
+      
+      # Conexión a la Base de Datos
+      - key: DATABASE_URL
+        fromService:
+          type: mysql
+          name: Sistema_SOLGES_2025 # Debe coincidir con el nombre de tu BD
+          property: connectionString
+          
+      # Conexión a Redis
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: Sistema_SOLGES_2025_cache # Debe coincidir con el nombre de tu caché
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: mi-cache
+          property: port
+          
+      # Configuración para Livewire/Sesiones
+      - key: SESSION_DRIVER
+        value: redis
+      - key: CACHE_DRIVER
+        value: redis
