@@ -178,7 +178,7 @@
                                 class="sidebar-item w-full flex items-center justify-between p-3 text-white rounded-lg hover:bg-white hover:bg-opacity-10">
                                 <div class="flex items-center">
                                     <i class='bx bx-hard-hat text-xl mr-3'></i>
-                                    <span>Parametros</span>
+                                    <span>Parámetros</span>
                                 </div>
                                 <i class='bx bx-chevron-down transition-transform'
                                     :class="{'rotate-180': configurateParameters}"></i>
