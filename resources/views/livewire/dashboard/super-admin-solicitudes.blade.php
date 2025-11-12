@@ -142,7 +142,7 @@
                             Nueva Solicitud
                         </button>
                     @endif
-                    @if($activeTab !== 'list' && count($solicitudesRender) > 0)
+                    @if($activeTab !== 'list' && count($solicitudesRender) > 0 && !$showSolicitud)
                         <button wire:click="setActiveTab('list')" 
                                 class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                             <i class='bx bx-list-ul mr-2'></i>
