@@ -17,9 +17,9 @@ services:
       - key: MYSQL_ROOT_PASSWORD
         generateValue: true # Render creará una contraseña segura
       - key: MYSQL_DATABASE
-        value: laravel # Elige el nombre de tu base de datos
+        value: sistema_solges_2025 # Elige el nombre de tu base de datos
       - key: MYSQL_USER
-        value: user_laravel # Elige tu usuario
+        value: root # Elige tu usuario
       - key: MYSQL_PASSWORD
         generateValue: true # Render creará una contraseña segura
 
