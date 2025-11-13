@@ -229,4 +229,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/superadmin/solicitudes', SuperAdminSolicitudes::class)
             ->name('dashboard.superadmin.solicitudes')
             ->middleware('role:1');
+            Route::post('reuniones/{reunion}/notificar-solicitante', [ReunionController::class, 'notificarSolicitante'])
+    ->name('dashboard.reuniones.notificar.solicitante');
 });
