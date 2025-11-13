@@ -64,27 +64,27 @@ services:
       - key: DB_HOST
         fromService:
           type: pserv # (CAMBIO) Apuntamos al 'pserv'
-          name: sistema_solges_2025 # (CAMBIO) El nombre de nuestro servicio MySQL
+          name: proyecto_solges_2025 # (CAMBIO) El nombre de nuestro servicio MySQL
           property: host
       - key: DB_PORT
         fromService:
           type: pserv
-          name: sistema_solges_2025
+          name: proyecto_solges_2025
           property: port
       - key: DB_DATABASE # Leemos la variable del servicio MySQL
         fromService:
           type: pserv
-          name: sistema_solges_2025
+          name: proyecto_solges_2025
           envVarKey: MYSQL_DATABASE # (CAMBIO) Coincide con la clave de arriba
       - key: DB_USERNAME # Leemos la variable del servicio MySQL
         fromService:
           type: pserv
-          name: sistema_solges_2025
+          name: proyecto_solges_2025
           envVarKey: MYSQL_USER # (CAMBIO) Coincide con la clave de arriba
       - key: DB_PASSWORD # Leemos la variable del servicio MySQL
         fromService:
           type: pserv
-          name: sistema_solges_2025
+          name: proyecto_solges_2025
           envVarKey: MYSQL_PASSWORD # (CAMBIO) Coincide con la clave de arriba
           
       # Conexión a Redis (Sin cambios)
