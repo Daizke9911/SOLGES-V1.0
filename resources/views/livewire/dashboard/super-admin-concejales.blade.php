@@ -77,7 +77,7 @@
                     <table class="w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     {{-- wire:click="orden('persona.nombre')" --}}>
                                     <div class="flex justify-between items-center">
                                         <div class="flex items-center">
