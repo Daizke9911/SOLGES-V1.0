@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
         Personas::updateOrCreate(
             ['cedula' => 1234567],
             [
-                'nombre' => 'Jesus',
-                'apellido' => 'Chaviel',
-                'segundo_nombre' => 'Usuario',
+                'nombre' => 'Super',
+                'apellido' => 'Admin',
+                'segundo_nombre' => 'Solges',
                 'segundo_apellido' => 'Sistema',
                 'nacionalidad' => 1,
                 'genero' => 1,
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('Admin123$')
             ]
         );
-
+/* 
         // Create Admin user
         Personas::updateOrCreate(
             ['cedula' => 29970399],
@@ -111,7 +111,7 @@ class UserSeeder extends Seeder
                 'role' => 2, // Trabajador
                 'password' => Hash::make('Trabajador123$')
             ]
-        );
+        ); */
        
     }
 }

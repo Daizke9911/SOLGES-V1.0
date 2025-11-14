@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-50">
-      <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center py-6">
                 <div class="flex items-center mb-4 md:mb-0">
@@ -12,6 +12,12 @@
                             <p class="text-sm text-gray-600">Sistema Municipal CMBEY</p>
                         </div>
                     </div>
+                </div>
+                <div class="flex items-center justify-end space-x-4">
+                    <a href="{{ route('dashboard.superadmin.trabajadores') }}"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                        Regresar
+                    </a>
                 </div>
             </div>
         </div>

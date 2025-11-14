@@ -16,16 +16,16 @@ class DatabaseSeeder extends Seeder
             SubCategoriasSeeder::class,
             SecurityQuestionSeeder::class,
             RoleSeeder::class,
-            InstitucionSeeder::class,
             GeneroSeeder::class,
             NacionalidadSeeder::class,
-            UserSeeder::class,
-            ConcejalesSeeder::class,
+            InstitucionSeeder::class,
+            TipoReunionSeeder::class,
             ParroquiaSeeder::class,
             ComunidadesSeeder::class,
+            UserSeeder::class,
+/*             ConcejalesSeeder::class,
             SolicitudesSeeder::class,
-            TipoReunionSeeder::class,
-            ReunionSeeder::class,
+            ReunionSeeder::class, */
 
         ]);
     }

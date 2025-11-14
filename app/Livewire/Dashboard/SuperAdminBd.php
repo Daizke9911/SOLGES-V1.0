@@ -201,6 +201,77 @@ class SuperAdminBd extends Component
         }
     }
 
+   private function executeSqlImport($filepath)
+    {
+        if (!file_exists($this->mysqlPath)) {
+            throw new \Exception('Ruta de mysql no válida. Archivo no encontrado en: ' . $this->mysqlPath);
+        }
+
+        @ini_set('max_execution_time', 600);
+
+        $dbName = env('DB_DATABASE' , 'sistema_solges_2025');
+        $dbUser = env('DB_USERNAME', 'root');
+        $dbPassword = env('DB_PASSWORD');
+        $dbHost = env('DB_HOST', '127.0.0.1'); 
+        $dbPort = env('DB_PORT', '3306');
+
+        if (empty($dbName)) {
+            throw new \Exception('El nombre de la base de datos (DB_DATABASE) no puede estar vacío.');
+        }
+
+        $args = [
+            '--host=' . escapeshellarg($dbHost),
+            '--port=' . escapeshellarg($dbPort),
+            '--user=' . escapeshellarg($dbUser),
+        ];
+
+        if (!empty($dbPassword)) {
+            $args[] = '-p' . escapeshellarg($dbPassword);
+        }
+        
+        $command = sprintf(
+            '%s %s %s < %s',
+            escapeshellarg($this->mysqlPath),
+            implode(' ', $args),
+            escapeshellarg($dbName),
+            escapeshellarg($filepath)
+        );
+
+        $env = [];
+        if (!empty($dbPassword)) {
+             $env['MYSQL_PWD'] = $dbPassword;
+             $args_env = [
+                '--host=' . escapeshellarg($dbHost),
+                '--port=' . escapeshellarg($dbPort),
+                '--user=' . escapeshellarg($dbUser),
+             ];
+             $command = sprintf(
+                '%s %s %s < %s',
+                escapeshellarg($this->mysqlPath),
+                implode(' ', $args_env),
+                escapeshellarg($dbName),
+                escapeshellarg($filepath)
+            );
+        }
+
+        Log::info('Ejecutando importación SQL...');
+
+        $process = Process::fromShellCommandline($command, null, $env);
+        $process->setTimeout(600);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            $errorOutput = $process->getErrorOutput();
+            
+            $sanitizedCommand = preg_replace('/-p\S*/', '-p****', $command); 
+            
+            Log::error("Fallo en mysql import. Error: " . $errorOutput . " Comando: " . $sanitizedCommand);
+            throw new \Exception("Fallo en la importación de SQL. Error: " . $errorOutput);
+        }
+        
+        Log::info('Importación SQL completada exitosamente.');
+    }
+
    private function executeJsonImport($filepath)
     {
         try {

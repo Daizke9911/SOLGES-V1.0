@@ -176,26 +176,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/superadmin/trabajadores', Index::class)
             ->name('dashboard.superadmin.trabajadores')
             ->middleware('role:1');
-/* 
-        Route::get('/trabajadores/exportar-todos', [TrabajadorController::class, 'exportarTodosPdf'])
-            ->name('trabajadores.exportarTodosPdf')
-            ->middleware('role:1');
-
-        Route::get('/trabajadores/{persona_cedula}/pdf', [TrabajadorController::class, 'exportPdf'])
-            ->name('trabajadores.exportPdf')
-            ->middleware('role:1');
-
-        Route::get('/trabajadores/exportar', [TrabajadorController::class, 'exportExcel'])
-            ->name('trabajadores.export')
-            ->middleware('role:1');
-
-        Route::resource('trabajadores', TrabajadorController::class)
-            ->parameters(['trabajadores' => 'persona_cedula' ])
-            ->middleware('role:1');
-
-        Route::post('trabajadores/buscar', [TrabajadorController::class, 'buscarPersona'])
-            ->name('trabajadores.buscar')
-            ->middleware('role:1'); */
 
         Route::get('/dashboard/admin/usuarios', AdministradoUsuarios::class)
             ->name('dashboard.admin.usuarios')
